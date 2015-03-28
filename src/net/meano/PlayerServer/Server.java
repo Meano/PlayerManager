@@ -48,8 +48,9 @@ public class Server extends Thread {
 				ReceiveClientInfo = ReceiveString.split("\\$", 5);
 				if (ReceiveClientInfo.length == 5) {
 					PMM.getLogger().info("玩家:" + ReceiveClientInfo[1] + "版本:" + ReceiveClientInfo[2] + "类型:" + ReceiveClientInfo[3]);
-					if(ReceiveClientInfo[3].equals("Connetc")){
+					if(ReceiveClientInfo[3].equals("Connect")){
 						PMM.SQLData.SetClientStatu(ReceiveClientInfo[1], ClientStatu.Online);
+						PMM.getLogger().info("玩家: " + ReceiveClientInfo[1] + " 使用专有客户端登陆游戏！");
 					}
 				}
 				ReceiveString = null;
@@ -57,7 +58,7 @@ public class Server extends Thread {
 				try {
 					SocketAccept.close();
 					SocketReader.close();
-				} catch (IOException e1) {
+				} catch (IOException ex) {
 				}
 				PMM.getLogger().info(e.getLocalizedMessage());
 			}

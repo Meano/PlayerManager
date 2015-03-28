@@ -23,3 +23,5 @@ permissions:
     default: false
   PlayerManager.Award:
     default: false
+  PlayerManager.Warn:
+    default: false

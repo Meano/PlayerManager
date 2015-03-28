@@ -1,5 +1,6 @@
 package net.meano.PlayerManager;
 
+import net.meano.DataBase.ClientStatu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
@@ -22,13 +24,7 @@ public class PlayerManagerListeners implements Listener {
 		Perm = (PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit");
 	}
 	
-	/*@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event){
-		event.getFrom().getWorld().playEffect(event.getFrom(),Effect.WITCH_MAGIC, 0);
-		event.getFrom().getWorld().playEffect(event.getTo(),Effect.CLOUD, 0);
-		event.getFrom().getWorld().playEffect(event.getFrom().add(0,1,0),Effect.COLOURED_DUST, 0);
-	}*/
-	
+	//玩家预登陆事件
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
 		String PreLoginIP = event.getAddress().getHostName();
@@ -48,21 +44,20 @@ public class PlayerManagerListeners implements Listener {
 		String OnlinePlayerName = null;
 		for (Player P : PPM.getServer().getOnlinePlayers()) {
 			if (P.getAddress().getHostName().equals(PreLoginIP)) {
-				isOnline = true;
 				OnlinePlayerName = P.getName();
+				if(!OnlinePlayerName.equals(event.getName())){
+					isOnline = true;
+					continue;
+				}
 			}
 		}
 		if (isOnline) {
-			PPM.getLogger().info("玩家" + OnlinePlayerName + "试图用" + event.getName() + "登陆游戏，有小号登陆嫌疑，ip地址" + PreLoginIP);
-			// event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL,
-			// "一人一号，不要试图用小号登陆");
+			Bukkit.broadcast("玩家" + OnlinePlayerName + "试图用" + event.getName() + "登陆游戏，有小号登陆嫌疑，ip地址" + PreLoginIP, "PlayerManager.Warn");
 		}
 		PPM.SQLData.Close();
 		PPM.SQLData.Open();
 		// 存在此玩家
 		if (PPM.SQLData.HasPlayer(PlayerName)) {
-			if (PPM.SQLData.isTodayFirstPlay(PlayerName))
-				return;
 			if (PPM.SQLData.GetComboType(PlayerName).equals("Normal")) {
 				if ((PPM.SQLData.GetTodayLimitMinute(PlayerName) <= 0) && (PPM.SQLData.GetAwardMinute(PlayerName) <= 0)) {
 					event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "亲爱的免费玩家，您的免费时长和为服务器做任务获得的时长已经用完，您可选择购买服务器无限时套餐，或等待6点或18点的时长更新重新登陆游戏。");
@@ -70,7 +65,6 @@ public class PlayerManagerListeners implements Listener {
 			} else if (PPM.SQLData.GetComboType(PlayerName).equals("B")) {
 				String Week = PPM.getWeekString(System.currentTimeMillis());
 				if (Week.equals("星期日") || Week.equals("星期六") || Week.equals("星期五")) {
-
 				} else {
 					if ((PPM.SQLData.GetTodayLimitMinute(PlayerName) <= 0) && (PPM.SQLData.GetAwardMinute(PlayerName) <= 0)) {
 						event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "亲爱的套餐B玩家，今天是" + Week + "，您的免费时长和为服务器做任务获得的时长已经用完，您可选择补差价购买服务器无限时套餐A，或等待6点或18点的时长更新重新登陆游戏。");
@@ -79,7 +73,8 @@ public class PlayerManagerListeners implements Listener {
 			}
 		}
 	}
-
+	
+	//玩家登陆游戏事件
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String PlayerName = event.getPlayer().getName();
@@ -102,15 +97,14 @@ public class PlayerManagerListeners implements Listener {
 			event.getPlayer().sendMessage(ChatColor.AQUA + "之前捐助过服务器的将获得专享套餐，长期在服务器游戏的玩家可以选择以下两种套餐：");
 			event.getPlayer().sendMessage(ChatColor.GREEN + "套餐A：25元/月，一个月内游戏不限时，并给予当月" + ChatColor.YELLOW + "10次称号更改和2次皮肤修改。");
 			event.getPlayer().sendMessage(ChatColor.GREEN + "套餐B：12元/月，一个月内周五六日不限时，并给予当月" + ChatColor.YELLOW + "3次称号更改。");
-			PPM.getLogger().info("=====" + PlayerName + " 新添加入数据库=====");
+			PPM.getLogger().info(PlayerName + " 新添加入数据库");
 		} else {
 			FirstPlay = PPM.SQLData.isTodayFirstPlay(PlayerName);
 			if (FirstPlay) { // 日第一次登陆
-				PPM.getLogger().info("=====" + PlayerName + " 今天第一次登陆=====");
+				PPM.getLogger().info(PlayerName + " 今天第一次登陆，距上一次登陆已有 " + PPM.SQLData.CalculateDaysLast(PlayerName) + " 天。");
 				PPM.SQLData.UpdateTodayFirstLogin(PlayerName);
 			} else {
-				PPM.getLogger().info("=====" + PlayerName + " 多次登陆" + PPM.SQLData.GetTodayLimitMinute(PlayerName) + "=====");
-				PPM.getLogger().info("=====距离今天第一次登陆已有" + (System.currentTimeMillis() - PPM.SQLData.GetTodayFirstLogin(PlayerName)) / 60000 + "分=====");
+				PPM.getLogger().info(PlayerName + "今日多次登陆，剩余可用在线时间 " + PPM.SQLData.GetTodayLimitMinute(PlayerName) + "分。");
 			}
 			boolean ComboSuit = false;
 			PlayerCombo = PPM.SQLData.GetComboType(PlayerName);
@@ -223,6 +217,16 @@ public class PlayerManagerListeners implements Listener {
 				if (!ComboSuit)
 					Perm.AddGroup(event.getPlayer(), "ComboA");
 			}
+		}
+	}
+
+	//玩家退出游戏事件
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		String PlayerName = event.getPlayer().getName();
+		if(PPM.SQLData.GetClientStatu(PlayerName).equals(ClientStatu.Online)){
+			PPM.SQLData.SetClientStatu(PlayerName, ClientStatu.Offline);
+			PPM.getLogger().info("使用专用客户端的玩家: " + PlayerName + "已经离线。");
 		}
 	}
 }

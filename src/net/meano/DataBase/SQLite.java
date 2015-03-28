@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.TimeZone;
 import net.meano.PlayerManager.PlayerManagerMain;
 
 public class SQLite implements SQLData {
@@ -39,13 +41,12 @@ public class SQLite implements SQLData {
 			// 超时设置30s
 			DataBaseStatement.setQueryTimeout(30);
 			// 运行命令 如果表不存在则建立表PMPlayers，存储玩家列表
-			DataBaseStatement.executeUpdate("CREATE TABLE IF NOT EXISTS PMPlayers " + "(PlayerName VARCHAR(30) NOT NULL UNIQUE, " + "UUID VARCHAR(130) NOT NULL UNIQUE, " + "PlayerLevel INT NOT NULL, " + "TodayFirstLogin INTEGER NOT NULL, " + "ComboType VARCHAR(10) NOT NULL, " + "TodayLimitMinute INT NOT NULL, " + "ComboExpireTime INTEGER NOT NULL, " + "ClientStatu VARCHAR(10) NOT NULL, " + "ClientNoCheck VARCHAR(10) NOT NULL, " + "AwardMinute INT NOT NULL" + "ContinuousDays INT NOT NULL);");
+			DataBaseStatement.executeUpdate("CREATE TABLE IF NOT EXISTS PMPlayers " + "(PlayerName VARCHAR(30) NOT NULL UNIQUE, " + "UUID VARCHAR(130) NOT NULL UNIQUE, " + "PlayerLevel INT NOT NULL, " + "TodayFirstLogin INTEGER NOT NULL, " + "ComboType VARCHAR(10) NOT NULL, " + "TodayLimitMinute INT NOT NULL, " + "ComboExpireTime INTEGER NOT NULL, " + "ClientStatu VARCHAR(10) NOT NULL, " + "ClientNoCheck VARCHAR(10) NOT NULL, " + "AwardMinute INT NOT NULL," + "ContinuousDays INT NOT NULL);");
 			DatabaseMetaData md = DataBaseConnection.getMetaData();
 			ResultSet rs = md.getColumns(null, null, "PMPlayers", "ContinuousDays");
 			if (!rs.next()) {
 				PMM.getLogger().info("正在插入新列ContinuousDays。");
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD ContinuousDays INT NOT NULL DEFAULT ( 0 );");
-				// ps.setInt(1, 0);
 				ps.executeUpdate();
 				PMM.getLogger().info("新列ContinuousDays插入完成。");
 			}
@@ -53,7 +54,6 @@ public class SQLite implements SQLData {
 			if (!rs.next()) {
 				PMM.getLogger().info("正在插入新列AwardMinute。");
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD AwardMinute INT NOT NULL DEFAULT ( 0 );");
-				// ps.setInt(1, 0);
 				ps.executeUpdate();
 				PMM.getLogger().info("新列AwardMinute插入完成。");
 			}
@@ -130,14 +130,31 @@ public class SQLite implements SQLData {
 			return -1;
 		}
 	}
-
-	// 判断是否为日首次登陆
+	//计算距上一次登陆相差的时间
+	public int CalculateDaysLast(String PlayerName){
+		long TimeTodayFirstLogin = GetTodayFirstLogin(PlayerName);
+		return CalculateDaysDiff(System.currentTimeMillis(),TimeTodayFirstLogin);
+	}
+	
+	//判断是否为日首次登陆
 	public boolean isTodayFirstPlay(String PlayerName) {
-		if (System.currentTimeMillis() - GetTodayFirstLogin(PlayerName) < 1000 * 60 * 60 * 24) {
+		if (CalculateDaysLast(PlayerName)<= 0) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	//计算两个long time的天数之差
+	public int CalculateDaysDiff(long TimeFirst,long TimeSecond){
+		return CalculateDays(TimeFirst)-CalculateDays(TimeSecond);
+	}
+	
+	//计算long time所属天数
+	public int CalculateDays(long TimeToCalculate){
+		Calendar CalculateDate= Calendar.getInstance();
+		CalculateDate.setTimeInMillis(TimeToCalculate);
+		CalculateDate.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+		return CalculateDate.get(Calendar.DAY_OF_YEAR)+(CalculateDate.get(Calendar.YEAR)*1000);
 	}
 
 	// 更新日首次登陆时间
