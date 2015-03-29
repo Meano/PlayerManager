@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.TimeZone;
+import net.meano.DataBase.ClientStatu;
 import net.meano.DataBase.SQLite;
 import net.meano.PlayerServer.Server;
 import org.bukkit.Bukkit;
@@ -61,6 +62,12 @@ public class PlayerManagerMain extends JavaPlugin {
 								p.kickPlayer(ChatColor.GOLD + "亲爱的免费玩家，今天您的免费时长已经用完，服务器任务奖励时长也已消耗完，您可选择购买服务器无限时套餐重新登陆游戏，或者多做奖励任务来换取时长。");
 							}
 						}
+						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online.name())){
+							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
+							if (OnlineMinutes >= 0){
+								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
+							}
+						}
 					} else if (ComboType.equals("B")) {
 						String Week = getWeekString(System.currentTimeMillis());
 						if (Week.equals("星期日") || Week.equals("星期六") || Week.equals("星期五")) {
@@ -78,6 +85,12 @@ public class PlayerManagerMain extends JavaPlugin {
 								} else {
 									p.kickPlayer(ChatColor.GOLD + "亲爱的B套餐玩家，今天是工作日，您今天的免费时长已经用完，服务器任务奖励时长也已消耗完，欢迎您明天再来游戏。");
 								}
+							}
+						}
+						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online.name())){
+							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
+							if (OnlineMinutes >= 0){
+								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
 							}
 						}
 					}
@@ -126,7 +139,7 @@ public class PlayerManagerMain extends JavaPlugin {
 
 	public void onDisable() {
 		SQLData.Close();
-		getLogger().info("正在关闭端口");
+		getLogger().info("正在关闭端口25566。");
 		PlayerSocket.CloseServer();
 	}
 

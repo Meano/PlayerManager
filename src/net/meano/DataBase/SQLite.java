@@ -41,7 +41,19 @@ public class SQLite implements SQLData {
 			// 超时设置30s
 			DataBaseStatement.setQueryTimeout(30);
 			// 运行命令 如果表不存在则建立表PMPlayers，存储玩家列表
-			DataBaseStatement.executeUpdate("CREATE TABLE IF NOT EXISTS PMPlayers " + "(PlayerName VARCHAR(30) NOT NULL UNIQUE, " + "UUID VARCHAR(130) NOT NULL UNIQUE, " + "PlayerLevel INT NOT NULL, " + "TodayFirstLogin INTEGER NOT NULL, " + "ComboType VARCHAR(10) NOT NULL, " + "TodayLimitMinute INT NOT NULL, " + "ComboExpireTime INTEGER NOT NULL, " + "ClientStatu VARCHAR(10) NOT NULL, " + "ClientNoCheck VARCHAR(10) NOT NULL, " + "AwardMinute INT NOT NULL," + "ContinuousDays INT NOT NULL);");
+			DataBaseStatement.executeUpdate(	"CREATE TABLE IF NOT EXISTS PMPlayers "
+										+ "(PlayerName VARCHAR(30) NOT NULL UNIQUE, "
+										+ "UUID VARCHAR(130) NOT NULL UNIQUE, "
+										+ "PlayerLevel INT NOT NULL, "
+										+ "TodayFirstLogin INTEGER NOT NULL, "
+										+ "ComboType VARCHAR(10) NOT NULL, "
+										+ "TodayLimitMinute INT NOT NULL, "
+										+ "ComboExpireTime INTEGER NOT NULL, "
+										+ "ClientStatu VARCHAR(10) NOT NULL, "
+										+ "ClientNoCheck VARCHAR(10) NOT NULL, "
+										+ "AwardMinute INT NOT NULL," 
+										+ "ContinuousDays INT NOT NULL,"
+										+ "OnlineMinutes INT NOT NULL);");
 			DatabaseMetaData md = DataBaseConnection.getMetaData();
 			ResultSet rs = md.getColumns(null, null, "PMPlayers", "ContinuousDays");
 			if (!rs.next()) {
@@ -49,6 +61,13 @@ public class SQLite implements SQLData {
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD ContinuousDays INT NOT NULL DEFAULT ( 0 );");
 				ps.executeUpdate();
 				PMM.getLogger().info("新列ContinuousDays插入完成。");
+			}
+			rs = md.getColumns(null, null, "PMPlayers", "OnlineMinutes");
+			if (!rs.next()) {
+				PMM.getLogger().info("正在插入新列OnlineMinutes。");
+				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD OnlineMinutes INT NOT NULL DEFAULT ( 0 );");
+				ps.executeUpdate();
+				PMM.getLogger().info("新列OnlineMinutes插入完成。");
 			}
 			rs = md.getColumns(null, null, "PMPlayers", "AwardMinute");
 			if (!rs.next()) {
@@ -98,7 +117,20 @@ public class SQLite implements SQLData {
 	// 添加玩家
 	public void AddNewPlayer(String PlayerName, String UUID) {
 		try {
-			PreparedStatement ps = DataBaseConnection.prepareStatement("INSERT INTO PMPlayers" + "(PlayerName, " + "UUID, " + "PlayerLevel, " + "TodayFirstLogin, " + "ComboType," + "TodayLimitMinute, " + "ComboExpireTime, " + "ClientStatu, " + "ClientNoCheck, " + "AwardMinute,"+"ContinuousDays)" + " VALUES(?,?,?,?,?,?,?,?,?,?,?);");
+			PreparedStatement ps = DataBaseConnection.prepareStatement("INSERT INTO PMPlayers"
+													+ "(PlayerName, " 
+													+ "UUID, " 
+													+ "PlayerLevel, " 
+													+ "TodayFirstLogin, " 
+													+ "ComboType," 
+													+ "TodayLimitMinute, " 
+													+ "ComboExpireTime, " 
+													+ "ClientStatu, " 
+													+ "ClientNoCheck, " 
+													+ "AwardMinute,"
+													+ "ContinuousDays," 
+													+ "OnlineMinutes)" 
+													+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
 			ps.setString(1, PlayerName.toLowerCase());
 			ps.setString(2, UUID);
 			ps.setInt(3, 0);
@@ -110,6 +142,7 @@ public class SQLite implements SQLData {
 			ps.setString(9, "false");
 			ps.setInt(10, 0);
 			ps.setInt(11, 0);
+			ps.setInt(12, 0);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 
@@ -328,6 +361,60 @@ public class SQLite implements SQLData {
 				return null;
 		} catch (SQLException e) {
 			return null;
+		}
+	}
+	
+	// 获得连续登陆天数
+	public int GetContinuousDays(String PlayerName) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
+			ps.setString(1, PlayerName.toLowerCase());
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				return result.getInt("ContinuousDays");
+			} else
+				return -1;
+		} catch (SQLException e) {
+			return -1;
+		}
+	}
+
+	// 设定连续登陆天数
+	public void SetContinuousDays(String PlayerName, long ContinuousDays) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ContinuousDays=? WHERE PlayerName=?;");
+			ps.setLong(1, ContinuousDays);
+			ps.setString(2, PlayerName.toLowerCase());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+
+		}
+	}
+	
+	// 获得专用客户端在线分钟数
+	public int GetOnlineMinutes(String PlayerName) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
+			ps.setString(1, PlayerName.toLowerCase());
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				return result.getInt("OnlineMinutes");
+			} else
+				return -1;
+		} catch (SQLException e) {
+			return -1;
+		}
+	}
+
+	// 设定专用客户端在线分钟数
+	public void SetOnlineMinutes(String PlayerName, long OnlineMinutes) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET OnlineMinutes=? WHERE PlayerName=?;");
+			ps.setLong(1, OnlineMinutes);
+			ps.setString(2, PlayerName.toLowerCase());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+
 		}
 	}
 	

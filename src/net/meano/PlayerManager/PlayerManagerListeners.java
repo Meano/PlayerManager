@@ -219,7 +219,30 @@ public class PlayerManagerListeners implements Listener {
 			}
 		}
 	}
-
+	
+	public void CalculateContinuousDays(Player player){
+		String PlayerName = player.getName();
+		if(PPM.SQLData.GetOnlineMinutes(PlayerName)>120){
+			int ContinuousDays = PPM.SQLData.GetContinuousDays(PlayerName);		//连续登陆天数
+			int AwardMinute = PPM.SQLData.GetAwardMinute(PlayerName);			//奖励分钟数
+			player.sendMessage(ChatColor.GREEN + "玩家你好，你已连续使用服务器专用客户端进行登陆并在线时长超过两小时 " + ContinuousDays + "天。");
+			if(ContinuousDays < 7){
+				player.sendMessage(ChatColor.GREEN + "获得奖励在线时间 " + ContinuousDays*5 + " 分钟。");
+				PPM.SQLData.SetAwardMinute(PlayerName, AwardMinute+5*ContinuousDays);
+			}else{
+				player.sendMessage(ChatColor.GREEN + "获得奖励在线时间 30 分钟。");
+				PPM.SQLData.SetAwardMinute(PlayerName, AwardMinute+30);
+			}
+			//持续登陆天数+1
+			PPM.SQLData.SetContinuousDays(PlayerName, ContinuousDays+1);
+		}else {
+			//断签
+			player.sendMessage(ChatColor.GREEN + "玩家你好，昨天你未使用服务器专用客户端进行登陆并在线时长超过两小时，连续登陆天数清零。");
+			PPM.SQLData.SetContinuousDays(PlayerName, 0);
+		}
+		player.sendMessage(ChatColor.GREEN + "连续每天使用专用客户端登陆并且在线时间超过2小时将获得(连续登陆天数x5)分钟的奖励时间。");
+		player.sendMessage(ChatColor.GREEN + "奖励时间每周日晚六点清零，请尽快使用。");
+	}
 	//玩家退出游戏事件
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
