@@ -5,9 +5,9 @@ import java.util.Calendar;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.TimeZone;
-import net.meano.DataBase.ClientStatu;
 import net.meano.DataBase.SQLite;
 import net.meano.PlayerServer.Server;
+import net.meano.PlayerManager.MinuteTick;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,86 +17,19 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlayerManagerMain extends JavaPlugin {
+	public static PlayerManagerMain PMM; 
 	public Server PlayerSocket;
 	public SQLite SQLData;
 	public boolean isUpdate = false;
 	public String[] SetWhitelist = new String[3];
-
 	public void onEnable() {
+		PMM = this;
 		getLogger().info("PlayerManager 0.1,by Meano. 正在载入.");
 		PluginManager PM = Bukkit.getServer().getPluginManager();
 		PM.registerEvents(new PlayerManagerListeners(this), this);
 		SQLData = new SQLite(new File(getDataFolder(), "PMData.db"), this);
 		SocketInitialize();
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-			@Override
-			public void run() {
-				SQLData.Close();
-				SQLData.Open();
-				long LongTime = System.currentTimeMillis();
-				if ((getTimeHours(LongTime) == 6) || (getTimeHours(LongTime) == 18)) {
-					if (getTimeMinutes(LongTime) < 3 && (!isUpdate)) {
-						SQLData.UpdateLimitTime(120);
-						SQLData.UpdateAwardTime(120);
-						Bukkit.broadcastMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "各位免费玩家，服务器已经更新了大家的免费在线时长，每天6点和18点更新，在线时长使用/pm me 查看。");
-						isUpdate = true;
-					} else if (getTimeMinutes(LongTime) > 3) {
-						isUpdate = false;
-					}
-				} else {
-				}
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					String ComboType = SQLData.GetComboType(p.getName());
-					if (ComboType.equals("Normal")) {
-						int LimitTime = SQLData.GetTodayLimitMinute(p.getName());
-						if (LimitTime > 0) {
-							if (LimitTime == 1) {
-								p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l您的免费时长已经用完，如果您有做服务器任务获得的奖励时间，接下来将消耗奖励时间，否则，您将被踢出游戏").toString());
-							}
-							SQLData.SetTodayLimitMinute(p.getName(), LimitTime - 1);
-						} else {
-							int AwardMinute = SQLData.GetAwardMinute(p.getName());
-							if (AwardMinute > 0) {
-								SQLData.SetAwardMinute(p.getName(), AwardMinute - 1);
-							} else {
-								p.kickPlayer(ChatColor.GOLD + "亲爱的免费玩家，今天您的免费时长已经用完，服务器任务奖励时长也已消耗完，您可选择购买服务器无限时套餐重新登陆游戏，或者多做奖励任务来换取时长。");
-							}
-						}
-						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online)){
-							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
-							if (OnlineMinutes >= 0){
-								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
-							}
-						}
-					} else if (ComboType.equals("B")) {
-						String Week = getWeekString(System.currentTimeMillis());
-						if (Week.equals("星期日") || Week.equals("星期六") || Week.equals("星期五")) {
-						} else {
-							int LimitTime = SQLData.GetTodayLimitMinute(p.getName());
-							if (LimitTime > 0) {
-								if (LimitTime == 1) {
-									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l您的免费时长已经用完，如果您有做服务器任务获得的奖励时间，接下来将消耗奖励时间，否则，您将被踢出游戏").toString());
-								}
-								SQLData.SetTodayLimitMinute(p.getName(), LimitTime - 1);
-							} else {
-								int AwardMinute = SQLData.GetAwardMinute(p.getName());
-								if (AwardMinute > 0) {
-									SQLData.SetAwardMinute(p.getName(), AwardMinute - 1);
-								} else {
-									p.kickPlayer(ChatColor.GOLD + "亲爱的B套餐玩家，今天是工作日，您今天的免费时长已经用完，服务器任务奖励时长也已消耗完，欢迎您明天再来游戏。");
-								}
-							}
-						}
-						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online)){
-							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
-							if (OnlineMinutes >= 0){
-								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
-							}
-						}
-					}
-				}
-			}
-		}, 1 * 15 * 12, 1 * 60 * 20);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MinuteTick(this), 1 * 15 * 12, 1 * 60 * 20);
 		SetWhitelist[0] = "Meano";
 		SetWhitelist[1] = "Meano";
 		SetWhitelist[2] = "Meano";
@@ -115,6 +48,12 @@ public class PlayerManagerMain extends JavaPlugin {
 		// getLogger().info(Bukkit.getOfflinePlayer("Meano").getUniqueId().toString());
 	}
 
+	public void onDisable() {
+		SQLData.Close();
+		getLogger().info("正在关闭端口25566。");
+		PlayerSocket.CloseServer();
+	}
+	
 	public String getDateString(long millis) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(millis);
@@ -137,17 +76,6 @@ public class PlayerManagerMain extends JavaPlugin {
 		return cal.get(Calendar.HOUR_OF_DAY);
 	}
 
-	public void onDisable() {
-		SQLData.Close();
-		getLogger().info("正在关闭端口25566。");
-		PlayerSocket.CloseServer();
-	}
-
-	public void SocketInitialize() {
-		PlayerSocket = new Server(this);
-		PlayerSocket.start();
-	}
-
 	public String getWeekString(long dt) {
 		String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
 		Calendar cal = Calendar.getInstance();
@@ -156,6 +84,11 @@ public class PlayerManagerMain extends JavaPlugin {
 		if (w < 0)
 			w = 0;
 		return weekDays[w];
+	}
+
+	public void SocketInitialize() {
+		PlayerSocket = new Server(this);
+		PlayerSocket.start();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

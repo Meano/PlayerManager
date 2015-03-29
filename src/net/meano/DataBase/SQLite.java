@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import net.meano.PlayerManager.PlayerManagerMain;
 
-public class SQLite implements SQLData {
+public class SQLite{
 	private File DataBaseFile;
 	private Connection DataBaseConnection;
 	public PlayerManagerMain PMM;
@@ -81,7 +81,6 @@ public class SQLite implements SQLData {
 		}
 	}
 
-	@Override
 	public void Open() {
 		try {
 			this.DataBaseConnection = DriverManager.getConnection("jdbc:sqlite:" + DataBaseFile.getPath());
@@ -90,7 +89,6 @@ public class SQLite implements SQLData {
 		}
 	}
 
-	@Override
 	public void Close() {
 		try {
 			if (DataBaseConnection != null && !DataBaseConnection.isClosed())
@@ -418,7 +416,6 @@ public class SQLite implements SQLData {
 		}
 	}
 	
-	@Override
 	public Connection getConnection() {
 		return this.DataBaseConnection;
 	}
