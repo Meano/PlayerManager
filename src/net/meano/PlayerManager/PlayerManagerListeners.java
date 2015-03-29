@@ -19,7 +19,8 @@ import com.platymuus.bukkit.permissions.PermissionsPlugin;
 public class PlayerManagerListeners implements Listener {
 	PlayerManagerMain PMM;
 	PermissionsPlugin Perm;
-
+	
+	//初始化
 	public PlayerManagerListeners(PlayerManagerMain GetPlugin) {
 		PMM = GetPlugin;
 		Perm = (PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit");
@@ -82,6 +83,7 @@ public class PlayerManagerListeners implements Listener {
 		String PlayerCombo = null;
 		Player player = event.getPlayer();
 		boolean FirstPlay = false;
+		int ContinuousDays = -1;
 		// 白名单
 		for (int i = 0; i < 3; i++) {
 			if (PMM.SetWhitelist[i].equalsIgnoreCase(PlayerName)) {
@@ -101,11 +103,12 @@ public class PlayerManagerListeners implements Listener {
 			player.sendMessage(ChatColor.GREEN + "套餐B：12元/月，一个月内周五六日不限时，并给予当月" + ChatColor.YELLOW + "3次称号更改。");
 			PMM.getLogger().info(PlayerName + " 新添加入数据库");
 		} else {
+			//判断是否是今天第一次登陆
 			FirstPlay = PMM.SQLData.isTodayFirstPlay(PlayerName);
-			if (FirstPlay) { // 日第一次登陆
+			if (FirstPlay) {
 				PMM.getLogger().info(PlayerName + " 今天第一次登陆，距上一次登陆已有 " + PMM.SQLData.CalculateDaysLast(PlayerName) + " 天。");
 				PMM.SQLData.UpdateTodayFirstLogin(PlayerName);
-				CalculateContinuousDays(player);
+				ContinuousDays = CalculateContinuousDays(player);
 			} else {
 				PMM.getLogger().info(PlayerName + "今日多次登陆，剩余可用在线时间 " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "分。");
 			}
@@ -121,7 +124,7 @@ public class PlayerManagerListeners implements Listener {
 			} else if (PlayerCombo.equals("Forever")) {
 				ForeverLogin(player);
 			}
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(), 1*20*60);
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PMM), 1*20*60);
 		}
 	}
 
@@ -256,24 +259,28 @@ public class PlayerManagerListeners implements Listener {
 			Perm.AddGroup(player, "ComboA");
 	}
 	
-	//计算奖励时间及
-	public void CalculateContinuousDays(Player player){
+	//计算奖励时间
+	public int CalculateContinuousDays(Player player){
 		String PlayerName = player.getName();
+		int ContinuousDays = 0;
 		if(PMM.SQLData.GetOnlineMinutes(PlayerName)>120){
-			int ContinuousDays = PMM.SQLData.GetContinuousDays(PlayerName);		//连续登陆天数
+			ContinuousDays = PMM.SQLData.GetContinuousDays(PlayerName);		//连续登陆天数
 			int AwardMinute = PMM.SQLData.GetAwardMinute(PlayerName);			//奖励分钟数
+			//持续登陆天数+1
+			ContinuousDays = ContinuousDays + 1;
+			PMM.SQLData.SetContinuousDays(PlayerName, ContinuousDays);
 			if(ContinuousDays < 7){
-				PMM.SQLData.SetAwardMinute(PlayerName, AwardMinute+5*ContinuousDays);
+				PMM.SQLData.SetAwardMinute(PlayerName, AwardMinute+5*ContinuousDays);;
 			}else{
 				PMM.SQLData.SetAwardMinute(PlayerName, AwardMinute+30);
 			}
-			//持续登陆天数+1
-			PMM.SQLData.SetContinuousDays(PlayerName, ContinuousDays+1);
 		}else {
-			//断签
+			ContinuousDays = 0;
 			PMM.SQLData.SetContinuousDays(PlayerName, 0);
 		}
+		return ContinuousDays;
 	}
+	
 	//玩家退出游戏事件
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
