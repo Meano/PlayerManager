@@ -62,7 +62,7 @@ public class PlayerManagerMain extends JavaPlugin {
 								p.kickPlayer(ChatColor.GOLD + "亲爱的免费玩家，今天您的免费时长已经用完，服务器任务奖励时长也已消耗完，您可选择购买服务器无限时套餐重新登陆游戏，或者多做奖励任务来换取时长。");
 							}
 						}
-						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online.name())){
+						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online)){
 							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
 							if (OnlineMinutes >= 0){
 								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
@@ -87,7 +87,7 @@ public class PlayerManagerMain extends JavaPlugin {
 								}
 							}
 						}
-						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online.name())){
+						if(SQLData.GetClientStatu(p.getName()).equals(ClientStatu.Online)){
 							int OnlineMinutes = SQLData.GetOnlineMinutes(p.getName());
 							if (OnlineMinutes >= 0){
 								SQLData.SetOnlineMinutes(p.getName(), OnlineMinutes + 1);
