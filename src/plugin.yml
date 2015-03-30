@@ -1,14 +1,14 @@
-name: PlayerManager
+﻿name: PlayerManager
 main: net.meano.PlayerManager.PlayerManagerMain
 version: 0.2
 author: Meano
 commands:
   PlayerManager:
-    description: 玩家管理。
+    description: 玩家管理
     usage: /PlayerManager
     aliases: [pm]
     permission: PlayerManager.Command
-    permission-message: 你没有权限。
+    permission-message: 你没有权限
 
 permissions:
   PlayerManager.*:

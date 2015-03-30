@@ -1,4 +1,4 @@
-package net.meano.PlayerManager;
+ï»¿package net.meano.PlayerManager;
 
 import net.meano.DataBase.ClientStatu;
 import net.meano.DataBase.SQLite;
@@ -29,14 +29,14 @@ public class MinuteTick implements Runnable {
 		}
 	}
 	
-	//¸üĞÂÃâ·ÑÍæ¼ÒÊ±¼ä
+	//æ›´æ–°å…è´¹ç©å®¶æ—¶é—´
 	public void UpdateTime(){
 		long LongTime = System.currentTimeMillis();
 		if ((PMM.getTimeHours(LongTime) == 6) || (PMM.getTimeHours(LongTime) == 18)) {
 			if (PMM.getTimeMinutes(LongTime) < 3 && (!PMM.isUpdate)) {
 				SQLData.UpdateLimitTime(120);
 				SQLData.UpdateAwardTime(120);
-				Bukkit.broadcastMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "¸÷Î»Ãâ·ÑÍæ¼Ò£¬·şÎñÆ÷ÒÑ¾­¸üĞÂÁË´ó¼ÒµÄÃâ·ÑÔÚÏßÊ±³¤£¬Ã¿Ìì6µãºÍ18µã¸üĞÂ£¬ÔÚÏßÊ±³¤Ê¹ÓÃ/pm me ²é¿´¡£");
+				Bukkit.broadcastMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "å„ä½å…è´¹ç©å®¶ï¼ŒæœåŠ¡å™¨å·²ç»æ›´æ–°äº†å¤§å®¶çš„å…è´¹åœ¨çº¿æ—¶é•¿ï¼Œæ¯å¤©6ç‚¹å’Œ18ç‚¹æ›´æ–°ï¼Œåœ¨çº¿æ—¶é•¿ä½¿ç”¨/pm me æŸ¥çœ‹ã€‚");
 				PMM.isUpdate = true;
 			} else if (PMM.getTimeMinutes(LongTime) > 3) {
 				PMM.isUpdate = false;
@@ -45,12 +45,12 @@ public class MinuteTick implements Runnable {
 		}
 	}
 	
-	//NormalÌ×²ÍÃ¿·ÖÖÓ½øĞĞµÄ´¦Àí
+	//Normalå¥—é¤æ¯åˆ†é’Ÿè¿›è¡Œçš„å¤„ç†
 	public void MinuteNormal(Player player){
 		int LimitTime = SQLData.GetTodayLimitMinute(player.getName());
 		if (LimitTime > 0) {
 			if (LimitTime == 1) {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&lÄúµÄÃâ·ÑÊ±³¤ÒÑ¾­ÓÃÍê£¬Èç¹ûÄúÓĞ×ö·şÎñÆ÷ÈÎÎñ»ñµÃµÄ½±ÀøÊ±¼ä£¬½ÓÏÂÀ´½«ÏûºÄ½±ÀøÊ±¼ä£¬·ñÔò£¬Äú½«±»Ìß³öÓÎÏ·").toString());
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&læ‚¨çš„å…è´¹æ—¶é•¿å·²ç»ç”¨å®Œï¼Œå¦‚æœæ‚¨æœ‰åšæœåŠ¡å™¨ä»»åŠ¡è·å¾—çš„å¥–åŠ±æ—¶é—´ï¼Œæ¥ä¸‹æ¥å°†æ¶ˆè€—å¥–åŠ±æ—¶é—´ï¼Œå¦åˆ™ï¼Œæ‚¨å°†è¢«è¸¢å‡ºæ¸¸æˆ").toString());
 			}
 			SQLData.SetTodayLimitMinute(player.getName(), LimitTime - 1);
 		} else {
@@ -58,7 +58,7 @@ public class MinuteTick implements Runnable {
 			if (AwardMinute > 0) {
 				SQLData.SetAwardMinute(player.getName(), AwardMinute - 1);
 			} else {
-				player.kickPlayer(ChatColor.GOLD + "Ç×°®µÄÃâ·ÑÍæ¼Ò£¬½ñÌìÄúµÄÃâ·ÑÊ±³¤ÒÑ¾­ÓÃÍê£¬·şÎñÆ÷ÈÎÎñ½±ÀøÊ±³¤Ò²ÒÑÏûºÄÍê£¬Äú¿ÉÑ¡Ôñ¹ºÂò·şÎñÆ÷ÎŞÏŞÊ±Ì×²ÍÖØĞÂµÇÂ½ÓÎÏ·£¬»òÕß¶à×ö½±ÀøÈÎÎñÀ´»»È¡Ê±³¤¡£");
+				player.kickPlayer(ChatColor.GOLD + "äº²çˆ±çš„å…è´¹ç©å®¶ï¼Œä»Šå¤©æ‚¨çš„å…è´¹æ—¶é•¿å·²ç»ç”¨å®Œï¼ŒæœåŠ¡å™¨ä»»åŠ¡å¥–åŠ±æ—¶é•¿ä¹Ÿå·²æ¶ˆè€—å®Œï¼Œæ‚¨å¯é€‰æ‹©è´­ä¹°æœåŠ¡å™¨æ— é™æ—¶å¥—é¤é‡æ–°ç™»é™†æ¸¸æˆï¼Œæˆ–è€…å¤šåšå¥–åŠ±ä»»åŠ¡æ¥æ¢å–æ—¶é•¿ã€‚");
 			}
 		}
 		if(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Online)){
@@ -69,15 +69,15 @@ public class MinuteTick implements Runnable {
 		}
 	}
 	
-	//BÌ×²ÍÃ¿·ÖÖÓ½øĞĞµÄ´¦Àí
+	//Bå¥—é¤æ¯åˆ†é’Ÿè¿›è¡Œçš„å¤„ç†
 	public void MinuteB(Player player){
 		String Week = PMM.getWeekString(System.currentTimeMillis());
-		if (Week.equals("ĞÇÆÚÈÕ") || Week.equals("ĞÇÆÚÁù") || Week.equals("ĞÇÆÚÎå")) {
+		if (Week.equals("æ˜ŸæœŸæ—¥") || Week.equals("æ˜ŸæœŸå…­") || Week.equals("æ˜ŸæœŸäº”")) {
 		} else {
 			int LimitTime = SQLData.GetTodayLimitMinute(player.getName());
 			if (LimitTime > 0) {
 				if (LimitTime == 1) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&lÄúµÄÃâ·ÑÊ±³¤ÒÑ¾­ÓÃÍê£¬Èç¹ûÄúÓĞ×ö·şÎñÆ÷ÈÎÎñ»ñµÃµÄ½±ÀøÊ±¼ä£¬½ÓÏÂÀ´½«ÏûºÄ½±ÀøÊ±¼ä£¬·ñÔò£¬Äú½«±»Ìß³öÓÎÏ·").toString());
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&læ‚¨çš„å…è´¹æ—¶é•¿å·²ç»ç”¨å®Œï¼Œå¦‚æœæ‚¨æœ‰åšæœåŠ¡å™¨ä»»åŠ¡è·å¾—çš„å¥–åŠ±æ—¶é—´ï¼Œæ¥ä¸‹æ¥å°†æ¶ˆè€—å¥–åŠ±æ—¶é—´ï¼Œå¦åˆ™ï¼Œæ‚¨å°†è¢«è¸¢å‡ºæ¸¸æˆ").toString());
 				}
 				SQLData.SetTodayLimitMinute(player.getName(), LimitTime - 1);
 			} else {
@@ -85,7 +85,7 @@ public class MinuteTick implements Runnable {
 				if (AwardMinute > 0) {
 					SQLData.SetAwardMinute(player.getName(), AwardMinute - 1);
 				} else {
-					player.kickPlayer(ChatColor.GOLD + "Ç×°®µÄBÌ×²ÍÍæ¼Ò£¬½ñÌìÊÇ¹¤×÷ÈÕ£¬Äú½ñÌìµÄÃâ·ÑÊ±³¤ÒÑ¾­ÓÃÍê£¬·şÎñÆ÷ÈÎÎñ½±ÀøÊ±³¤Ò²ÒÑÏûºÄÍê£¬»¶Ó­ÄúÃ÷ÌìÔÙÀ´ÓÎÏ·¡£");
+					player.kickPlayer(ChatColor.GOLD + "äº²çˆ±çš„Bå¥—é¤ç©å®¶ï¼Œä»Šå¤©æ˜¯å·¥ä½œæ—¥ï¼Œæ‚¨ä»Šå¤©çš„å…è´¹æ—¶é•¿å·²ç»ç”¨å®Œï¼ŒæœåŠ¡å™¨ä»»åŠ¡å¥–åŠ±æ—¶é•¿ä¹Ÿå·²æ¶ˆè€—å®Œï¼Œæ¬¢è¿æ‚¨æ˜å¤©å†æ¥æ¸¸æˆã€‚");
 				}
 			}
 		}

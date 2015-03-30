@@ -1,4 +1,4 @@
-package net.meano.PlayerServer;
+ï»¿package net.meano.PlayerServer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,7 +35,7 @@ public class Server extends Thread {
 	}
 
 	public void run() {
-		PMM.getLogger().info("¿ªÊ¼¼àÌı25566¶Ë¿Ú");
+		PMM.getLogger().info("å¼€å§‹ç›‘å¬25566ç«¯å£");
 		while (!PMServer.isClosed()) {
 			try {
 				SocketAccept = PMServer.accept();
@@ -47,10 +47,10 @@ public class Server extends Thread {
 				SocketReader.close();
 				ReceiveClientInfo = ReceiveString.split("\\$", 5);
 				if (ReceiveClientInfo.length == 5) {
-					PMM.getLogger().info("Íæ¼Ò:" + ReceiveClientInfo[1] + "°æ±¾:" + ReceiveClientInfo[2] + "ÀàĞÍ:" + ReceiveClientInfo[3]);
+					PMM.getLogger().info("ç©å®¶: " + ReceiveClientInfo[1] + " ç‰ˆæœ¬: " + ReceiveClientInfo[2] + " ç±»å‹: " + ReceiveClientInfo[3]);
 					if(ReceiveClientInfo[3].equals("Connect")){
 						PMM.SQLData.SetClientStatu(ReceiveClientInfo[1], ClientStatu.Online);
-						PMM.getLogger().info("Íæ¼Ò: " + ReceiveClientInfo[1] + " Ê¹ÓÃ×¨ÓĞ¿Í»§¶ËµÇÂ½ÓÎÏ·£¡");
+						PMM.getLogger().info("ç©å®¶: " + ReceiveClientInfo[1] + " ä½¿ç”¨ä¸“æœ‰å®¢æˆ·ç«¯ç™»é™†æ¸¸æˆï¼");
 					}
 				}
 				ReceiveString = null;

@@ -1,4 +1,4 @@
-package net.meano.DataBase;
+ï»¿package net.meano.DataBase;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,27 +20,27 @@ public class SQLite{
 
 	public SQLite(File dbFile, PlayerManagerMain plugin) {
 		PMM = plugin;
-		DataBaseFile = dbFile; // Êı¾İ¿âÎÄ¼ş
-		File dbDir = dbFile.getParentFile(); // »ñÈ¡ÎÄ¼şÂ·¾¶
-		dbDir.mkdir(); // ´´½¨ÎÄ¼ş¼Ğ
-		if (!dbFile.exists()) { // Èç¹ûÊı¾İ¿âÎÄ¼ş²»´æÔÚ
+		DataBaseFile = dbFile; // æ•°æ®åº“æ–‡ä»¶
+		File dbDir = dbFile.getParentFile(); // è·å–æ–‡ä»¶è·¯å¾„
+		dbDir.mkdir(); // åˆ›å»ºæ–‡ä»¶å¤¹
+		if (!dbFile.exists()) { // å¦‚æœæ•°æ®åº“æ–‡ä»¶ä¸å­˜åœ¨
 			try {
-				dbFile.createNewFile(); // ´´½¨Êı¾İ¿âÎÄ¼ş
+				dbFile.createNewFile(); // åˆ›å»ºæ•°æ®åº“æ–‡ä»¶
 			} catch (IOException e) {
 			}
 		}
 		try {
-			Class.forName("org.sqlite.JDBC"); // ÔØÈësqliteÀà
+			Class.forName("org.sqlite.JDBC"); // è½½å…¥sqliteç±»
 		} catch (ClassNotFoundException e) {
 		}
-		Open(); // Êı¾İ¿âÁ´½Ó´ò¿ª
+		Open(); // æ•°æ®åº“é“¾æ¥æ‰“å¼€
 
 		try {
-			// Êı¾İ¿â²Ù×÷
+			// æ•°æ®åº“æ“ä½œ
 			Statement DataBaseStatement = DataBaseConnection.createStatement();
-			// ³¬Ê±ÉèÖÃ30s
+			// è¶…æ—¶è®¾ç½®30s
 			DataBaseStatement.setQueryTimeout(30);
-			// ÔËĞĞÃüÁî Èç¹û±í²»´æÔÚÔò½¨Á¢±íPMPlayers£¬´æ´¢Íæ¼ÒÁĞ±í
+			// è¿è¡Œå‘½ä»¤ å¦‚æœè¡¨ä¸å­˜åœ¨åˆ™å»ºç«‹è¡¨PMPlayersï¼Œå­˜å‚¨ç©å®¶åˆ—è¡¨
 			DataBaseStatement.executeUpdate(	"CREATE TABLE IF NOT EXISTS PMPlayers "
 										+ "(PlayerName VARCHAR(30) NOT NULL UNIQUE, "
 										+ "UUID VARCHAR(130) NOT NULL UNIQUE, "
@@ -57,24 +57,24 @@ public class SQLite{
 			DatabaseMetaData md = DataBaseConnection.getMetaData();
 			ResultSet rs = md.getColumns(null, null, "PMPlayers", "ContinuousDays");
 			if (!rs.next()) {
-				PMM.getLogger().info("ÕıÔÚ²åÈëĞÂÁĞContinuousDays¡£");
+				PMM.getLogger().info("æ­£åœ¨æ’å…¥æ–°åˆ—ContinuousDaysã€‚");
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD ContinuousDays INT NOT NULL DEFAULT ( 0 );");
 				ps.executeUpdate();
-				PMM.getLogger().info("ĞÂÁĞContinuousDays²åÈëÍê³É¡£");
+				PMM.getLogger().info("æ–°åˆ—ContinuousDaysæ’å…¥å®Œæˆã€‚");
 			}
 			rs = md.getColumns(null, null, "PMPlayers", "OnlineMinutes");
 			if (!rs.next()) {
-				PMM.getLogger().info("ÕıÔÚ²åÈëĞÂÁĞOnlineMinutes¡£");
+				PMM.getLogger().info("æ­£åœ¨æ’å…¥æ–°åˆ—OnlineMinutesã€‚");
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD OnlineMinutes INT NOT NULL DEFAULT ( 0 );");
 				ps.executeUpdate();
-				PMM.getLogger().info("ĞÂÁĞOnlineMinutes²åÈëÍê³É¡£");
+				PMM.getLogger().info("æ–°åˆ—OnlineMinutesæ’å…¥å®Œæˆã€‚");
 			}
 			rs = md.getColumns(null, null, "PMPlayers", "AwardMinute");
 			if (!rs.next()) {
-				PMM.getLogger().info("ÕıÔÚ²åÈëĞÂÁĞAwardMinute¡£");
+				PMM.getLogger().info("æ­£åœ¨æ’å…¥æ–°åˆ—AwardMinuteã€‚");
 				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD AwardMinute INT NOT NULL DEFAULT ( 0 );");
 				ps.executeUpdate();
-				PMM.getLogger().info("ĞÂÁĞAwardMinute²åÈëÍê³É¡£");
+				PMM.getLogger().info("æ–°åˆ—AwardMinuteæ’å…¥å®Œæˆã€‚");
 			}
 		} catch (SQLException e) {
 			PMM.getLogger().info(e.getLocalizedMessage());
@@ -97,7 +97,7 @@ public class SQLite{
 		}
 	}
 
-	// ²éÕÒÓĞÎŞ´ËÍæ¼Ò
+	// æŸ¥æ‰¾æœ‰æ— æ­¤ç©å®¶
 	public boolean HasPlayer(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -112,7 +112,7 @@ public class SQLite{
 		}
 	}
 
-	// Ìí¼ÓÍæ¼Ò
+	// æ·»åŠ ç©å®¶
 	public void AddNewPlayer(String PlayerName, String UUID) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("INSERT INTO PMPlayers"
@@ -147,7 +147,7 @@ public class SQLite{
 		}
 	}
 
-	// »ñÈ¡ÈÕÊ×´ÎµÇÂ½Ê±¼ä
+	// è·å–æ—¥é¦–æ¬¡ç™»é™†æ—¶é—´
 	public long GetTodayFirstLogin(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -161,13 +161,13 @@ public class SQLite{
 			return -1;
 		}
 	}
-	//¼ÆËã¾àÉÏÒ»´ÎµÇÂ½Ïà²îµÄÊ±¼ä
+	//è®¡ç®—è·ä¸Šä¸€æ¬¡ç™»é™†ç›¸å·®çš„æ—¶é—´
 	public int CalculateDaysLast(String PlayerName){
 		long TimeTodayFirstLogin = GetTodayFirstLogin(PlayerName);
 		return CalculateDaysDiff(System.currentTimeMillis(),TimeTodayFirstLogin);
 	}
 	
-	//ÅĞ¶ÏÊÇ·ñÎªÈÕÊ×´ÎµÇÂ½
+	//åˆ¤æ–­æ˜¯å¦ä¸ºæ—¥é¦–æ¬¡ç™»é™†
 	public boolean isTodayFirstPlay(String PlayerName) {
 		if (CalculateDaysLast(PlayerName)<= 0) {
 			return false;
@@ -175,12 +175,12 @@ public class SQLite{
 			return true;
 		}
 	}
-	//¼ÆËãÁ½¸ölong timeµÄÌìÊıÖ®²î
+	//è®¡ç®—ä¸¤ä¸ªlong timeçš„å¤©æ•°ä¹‹å·®
 	public int CalculateDaysDiff(long TimeFirst,long TimeSecond){
 		return CalculateDays(TimeFirst)-CalculateDays(TimeSecond);
 	}
 	
-	//¼ÆËãlong timeËùÊôÌìÊı
+	//è®¡ç®—long timeæ‰€å±å¤©æ•°
 	public int CalculateDays(long TimeToCalculate){
 		Calendar CalculateDate= Calendar.getInstance();
 		CalculateDate.setTimeInMillis(TimeToCalculate);
@@ -188,7 +188,7 @@ public class SQLite{
 		return CalculateDate.get(Calendar.DAY_OF_YEAR)+(CalculateDate.get(Calendar.YEAR)*1000);
 	}
 
-	// ¸üĞÂÈÕÊ×´ÎµÇÂ½Ê±¼ä
+	// æ›´æ–°æ—¥é¦–æ¬¡ç™»é™†æ—¶é—´
 	public void UpdateTodayFirstLogin(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET TodayFirstLogin=? WHERE PlayerName=?;");
@@ -200,7 +200,7 @@ public class SQLite{
 		}
 	}
 
-	// »ñÈ¡Ì×²ÍÀàĞÍ
+	// è·å–å¥—é¤ç±»å‹
 	public String GetComboType(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -215,7 +215,7 @@ public class SQLite{
 		}
 	}
 
-	// ÉèÖÃÌ×²ÍÀàĞÍ
+	// è®¾ç½®å¥—é¤ç±»å‹
 	public void SetComboType(String PlayerName, String ComboType) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ComboType=? WHERE PlayerName=?;");
@@ -227,7 +227,7 @@ public class SQLite{
 		}
 	}
 
-	// »ñµÃµ±ÌìÏŞÊ±Ê±¼ä
+	// è·å¾—å½“å¤©é™æ—¶æ—¶é—´
 	public int GetTodayLimitMinute(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -242,7 +242,7 @@ public class SQLite{
 		}
 	}
 
-	// ÉèÖÃµ±ÌìÏŞ³¤Ê±¼ä
+	// è®¾ç½®å½“å¤©é™é•¿æ—¶é—´
 	public void SetTodayLimitMinute(String PlayerName, int TodayLimitMinute) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET TodayLimitMinute=? WHERE PlayerName=?;");
@@ -254,7 +254,7 @@ public class SQLite{
 		}
 	}
 
-	// »ñµÃÌ×²ÍÌìÊı
+	// è·å¾—å¥—é¤å¤©æ•°
 	public long GetComboExpireTime(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -269,7 +269,7 @@ public class SQLite{
 		}
 	}
 
-	// Éè¶¨Ì×²ÍÌìÊı
+	// è®¾å®šå¥—é¤å¤©æ•°
 	public void SetComboExpireTime(String PlayerName, long ExpireTime) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ComboExpireTime=? WHERE PlayerName=?;");
@@ -281,7 +281,7 @@ public class SQLite{
 		}
 	}
 
-	// »ñµÃÌ×²ÍÌìÊı
+	// è·å¾—å¥—é¤å¤©æ•°
 	public int GetAwardMinute(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -296,7 +296,7 @@ public class SQLite{
 		}
 	}
 
-	// Éè¶¨Ì×²ÍÌìÊı
+	// è®¾å®šå¥—é¤å¤©æ•°
 	public void SetAwardMinute(String PlayerName, long MinuteTime) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET AwardMinute=? WHERE PlayerName=?;");
@@ -308,7 +308,7 @@ public class SQLite{
 		}
 	}
 
-	// Ë¢ĞÂÃâ·ÑÍæ¼ÒÊ±¼ä
+	// åˆ·æ–°å…è´¹ç©å®¶æ—¶é—´
 	public void UpdateLimitTime(int min) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET TodayLimitMinute=? WHERE ComboType=? or ComboType=?;");
@@ -321,7 +321,7 @@ public class SQLite{
 		}
 	}
 
-	// Ë¢ĞÂACÍæ¼Ò½±ÀøÊ±¼ä
+	// åˆ·æ–°ACç©å®¶å¥–åŠ±æ—¶é—´
 	public void UpdateAwardTime(int min) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET AwardMinute=? WHERE ComboType in(?,?,?);");
@@ -335,7 +335,7 @@ public class SQLite{
 		}
 	}
 	
-	//¸ü¸Ä¿Í»§¶ËÔÚÏß×´Ì¬
+	//æ›´æ”¹å®¢æˆ·ç«¯åœ¨çº¿çŠ¶æ€
 	public void SetClientStatu(String PlayerName,ClientStatu Statu) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ClientStatu=? WHERE PlayerName=?;");
@@ -347,7 +347,7 @@ public class SQLite{
 		}
 	}
 	
-	//»ñÈ¡¿Í»§¶ËÔÚÏß×´Ì¬
+	//è·å–å®¢æˆ·ç«¯åœ¨çº¿çŠ¶æ€
 	public ClientStatu GetClientStatu(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -362,7 +362,7 @@ public class SQLite{
 		}
 	}
 	
-	// »ñµÃÁ¬ĞøµÇÂ½ÌìÊı
+	// è·å¾—è¿ç»­ç™»é™†å¤©æ•°
 	public int GetContinuousDays(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -377,7 +377,7 @@ public class SQLite{
 		}
 	}
 
-	// Éè¶¨Á¬ĞøµÇÂ½ÌìÊı
+	// è®¾å®šè¿ç»­ç™»é™†å¤©æ•°
 	public void SetContinuousDays(String PlayerName, long ContinuousDays) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ContinuousDays=? WHERE PlayerName=?;");
@@ -389,7 +389,7 @@ public class SQLite{
 		}
 	}
 	
-	// »ñµÃ×¨ÓÃ¿Í»§¶ËÔÚÏß·ÖÖÓÊı
+	// è·å¾—ä¸“ç”¨å®¢æˆ·ç«¯åœ¨çº¿åˆ†é’Ÿæ•°
 	public int GetOnlineMinutes(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -404,7 +404,7 @@ public class SQLite{
 		}
 	}
 
-	// Éè¶¨×¨ÓÃ¿Í»§¶ËÔÚÏß·ÖÖÓÊı
+	// è®¾å®šä¸“ç”¨å®¢æˆ·ç«¯åœ¨çº¿åˆ†é’Ÿæ•°
 	public void SetOnlineMinutes(String PlayerName, long OnlineMinutes) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET OnlineMinutes=? WHERE PlayerName=?;");

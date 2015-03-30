@@ -1,4 +1,4 @@
-package net.meano.PlayerManager;
+ï»¿package net.meano.PlayerManager;
 
 import java.io.File;
 import java.util.Calendar;
@@ -24,7 +24,7 @@ public class PlayerManagerMain extends JavaPlugin {
 	public String[] SetWhitelist = new String[3];
 	public void onEnable() {
 		PMM = this;
-		getLogger().info("PlayerManager 0.2,by Meano. ÕıÔÚÔØÈë.");
+		getLogger().info("PlayerManager 0.2,by Meano. æ­£åœ¨è½½å…¥.");
 		PluginManager PM = Bukkit.getServer().getPluginManager();
 		PM.registerEvents(new PlayerManagerListeners(this), this);
 		SQLData = new SQLite(new File(getDataFolder(), "PMData.db"), this);
@@ -50,7 +50,7 @@ public class PlayerManagerMain extends JavaPlugin {
 
 	public void onDisable() {
 		SQLData.Close();
-		getLogger().info("ÕıÔÚ¹Ø±Õ¶Ë¿Ú25566¡£");
+		getLogger().info("æ­£åœ¨å…³é—­ç«¯å£25566ã€‚");
 		PlayerSocket.CloseServer();
 	}
 	
@@ -59,7 +59,7 @@ public class PlayerManagerMain extends JavaPlugin {
 		cal.setTimeInMillis(millis);
 		@SuppressWarnings("resource")
 		Formatter ft = new Formatter(Locale.CHINA);
-		return ft.format("%1$tYÄê%1$tmÔÂ%1$tdÈÕ", cal).toString().replaceAll(":", "_");
+		return ft.format("%1$tYå¹´%1$tmæœˆ%1$tdæ—¥", cal).toString().replaceAll(":", "_");
 	}
 
 	public int getTimeMinutes(long millis) {
@@ -77,7 +77,7 @@ public class PlayerManagerMain extends JavaPlugin {
 	}
 
 	public String getWeekString(long dt) {
-		String[] weekDays = { "ĞÇÆÚÈÕ", "ĞÇÆÚÒ»", "ĞÇÆÚ¶ş", "ĞÇÆÚÈı", "ĞÇÆÚËÄ", "ĞÇÆÚÎå", "ĞÇÆÚÁù" };
+		String[] weekDays = { "æ˜ŸæœŸæ—¥", "æ˜ŸæœŸä¸€", "æ˜ŸæœŸäºŒ", "æ˜ŸæœŸä¸‰", "æ˜ŸæœŸå››", "æ˜ŸæœŸäº”", "æ˜ŸæœŸå…­" };
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(dt);
 		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
@@ -101,7 +101,7 @@ public class PlayerManagerMain extends JavaPlugin {
 						String ComboType = null;
 						long ExpireTime = System.currentTimeMillis();
 						if (!SQLData.HasPlayer(args[1])) {
-							sender.sendMessage("Ã»ÓĞÕâ¸öÍæ¼Ò£¡");
+							sender.sendMessage("æ²¡æœ‰è¿™ä¸ªç©å®¶ï¼");
 							return true;
 						}
 						if (args[2].equalsIgnoreCase("a")) {
@@ -115,7 +115,7 @@ public class PlayerManagerMain extends JavaPlugin {
 						} else if (args[2].equalsIgnoreCase("normal")) {
 							ComboType = "Normal";
 						} else {
-							sender.sendMessage("Ã»ÓĞ´ËÌ×²Í");
+							sender.sendMessage("æ²¡æœ‰æ­¤å¥—é¤");
 							return true;
 						}
 						if (args[3].endsWith("d")) {
@@ -123,17 +123,17 @@ public class PlayerManagerMain extends JavaPlugin {
 						} else if (args[3].endsWith("mon")) {
 							ExpireTime += ((long) Integer.parseInt(args[3].replace("mon", ""))) * 1000 * 60 * 60 * 24 * 30;
 						} else {
-							sender.sendMessage("Ê±¼ä²ÎÊı´íÎó");
+							sender.sendMessage("æ—¶é—´å‚æ•°é”™è¯¯");
 							return true;
 						}
 						SQLData.Close();
 						SQLData.Open();
 						SQLData.SetComboType(args[1], ComboType);
 						SQLData.SetComboExpireTime(args[1], ExpireTime);
-						sender.sendMessage("³É¹¦¸üĞÂÍæ¼Ò" + args[1] + "µÄÌ×²ÍÎª: " + ComboType + "Ì×²Í,Ì×²Íµ½ÆÚÈÕ" + getDateString(ExpireTime));
+						sender.sendMessage("æˆåŠŸæ›´æ–°ç©å®¶" + args[1] + "çš„å¥—é¤ä¸º: " + ComboType + "å¥—é¤,å¥—é¤åˆ°æœŸæ—¥" + getDateString(ExpireTime));
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm combo Íæ¼Ò Ì×²Í Ê±¼ä");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm combo ç©å®¶ å¥—é¤ æ—¶é—´");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("check")) {
@@ -147,7 +147,7 @@ public class PlayerManagerMain extends JavaPlugin {
 						SQLData.Close();
 						SQLData.Open();
 						if (!SQLData.HasPlayer(args[1])) {
-							sender.sendMessage(ChatColor.BLUE + "Ã»ÓĞÕâ¸öÍæ¼Ò£¡");
+							sender.sendMessage(ChatColor.BLUE + "æ²¡æœ‰è¿™ä¸ªç©å®¶ï¼");
 							return true;
 						}
 						ComboType = SQLData.GetComboType(args[1]);
@@ -157,23 +157,23 @@ public class PlayerManagerMain extends JavaPlugin {
 						//for (double Tps : MinecraftServer.getServer().recentTps) {
 						//	sender.sendMessage("TPS: " + Tps);
 						//}
-						sender.sendMessage(ChatColor.BLUE + "Íæ¼Ò" + args[1] + "ÓÎÏ·Ê±¼äÇé¿ö²éÑ¯:");
-						sender.sendMessage(ChatColor.YELLOW + "Ê±³¤Ì×²ÍÀàĞÍ:" + ComboType + "Ì×²Í");
+						sender.sendMessage(ChatColor.BLUE + "ç©å®¶" + args[1] + "æ¸¸æˆæ—¶é—´æƒ…å†µæŸ¥è¯¢:");
+						sender.sendMessage(ChatColor.YELLOW + "æ—¶é•¿å¥—é¤ç±»å‹:" + ComboType + "å¥—é¤");
 						if (ComboType.equals("Normal")) {
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ£ÓàÊ±³¤:" + TodayLimit + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÀÛ»ıÈÎÎñ½±ÀøÊ±³¤:" + AwardMinute + "·ÖÖÓ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥å‰©ä½™æ—¶é•¿:" + TodayLimit + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ç´¯ç§¯ä»»åŠ¡å¥–åŠ±æ—¶é•¿:" + AwardMinute + "åˆ†é’Ÿ");
 						} else if (ComboType.equals("Forever")) {
-							sender.sendMessage(ChatColor.YELLOW + "Ì×²ÍÓÀ²»¹ıÆÚ");
+							sender.sendMessage(ChatColor.YELLOW + "å¥—é¤æ°¸ä¸è¿‡æœŸ");
 						} else if (ComboType.equals("B")) {
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ£ÓàÊ±³¤:" + TodayLimit + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÀÛ»ıÈÎÎñ½±ÀøÊ±³¤:" + AwardMinute + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Ì×²Íµ½ÆÚÈÕ: " + getDateString(ExpireTime));
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥å‰©ä½™æ—¶é•¿:" + TodayLimit + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ç´¯ç§¯ä»»åŠ¡å¥–åŠ±æ—¶é•¿:" + AwardMinute + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "å¥—é¤åˆ°æœŸæ—¥: " + getDateString(ExpireTime));
 						} else {
-							sender.sendMessage(ChatColor.YELLOW + "Ì×²Íµ½ÆÚÈÕ: " + getDateString(ExpireTime));
+							sender.sendMessage(ChatColor.YELLOW + "å¥—é¤åˆ°æœŸæ—¥: " + getDateString(ExpireTime));
 						}
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm check Íæ¼Ò");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm check ç©å®¶");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("me")) {
@@ -192,27 +192,27 @@ public class PlayerManagerMain extends JavaPlugin {
 						AwardMinute = SQLData.GetAwardMinute(sender.getName());
 						ContinuousDays = SQLData.GetContinuousDays(sender.getName());
 						OnlineMinute = SQLData.GetOnlineMinutes(sender.getName());
-						sender.sendMessage(ChatColor.BLUE + "Íæ¼Ò" + sender.getName() + "ÓÎÏ·Ê±¼äÇé¿ö²éÑ¯:");
-						sender.sendMessage(ChatColor.YELLOW + "Ê±³¤Ì×²ÍÀàĞÍ:" + ComboType + "Ì×²Í");
+						sender.sendMessage(ChatColor.BLUE + "ç©å®¶" + sender.getName() + "æ¸¸æˆæ—¶é—´æƒ…å†µæŸ¥è¯¢:");
+						sender.sendMessage(ChatColor.YELLOW + "æ—¶é•¿å¥—é¤ç±»å‹:" + ComboType + "å¥—é¤");
 						if (ComboType.equals("Normal")) {
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ£ÓàÃâ·ÑÊ±³¤:" + TodayLimit + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÀÛ»ıÈÎÎñ½±ÀøÊ±³¤:" + AwardMinute + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÁ¬ĞøÊ¹ÓÃ×¨ÓÃ¿Í»§¶ËµÇÂ½ÌìÊı:" + ContinuousDays + "Ìì");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ¹ÓÃ×¨ÓÃ¿Í»§¶Ë·ÖÖÓÊı:" + OnlineMinute + "·ÖÖÓ,³¬¹ı120·Ö½«¼ÆÈëÁ¬ĞøµÇÂ½ÌìÊı¡£");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥å‰©ä½™å…è´¹æ—¶é•¿:" + TodayLimit + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ç´¯ç§¯ä»»åŠ¡å¥–åŠ±æ—¶é•¿:" + AwardMinute + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶è¿ç»­ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯ç™»é™†å¤©æ•°:" + ContinuousDays + "å¤©");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯åˆ†é’Ÿæ•°:" + OnlineMinute + "åˆ†é’Ÿ,è¶…è¿‡120åˆ†å°†è®¡å…¥è¿ç»­ç™»é™†å¤©æ•°ã€‚");
 						} else if (ComboType.equals("B")) {
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ£ÓàÊ£ÓàÊ±³¤:" + TodayLimit + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÀÛ»ıÈÎÎñ½±ÀøÊ±³¤:" + AwardMinute + "·ÖÖÓ");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼ÒÁ¬ĞøÊ¹ÓÃ×¨ÓÃ¿Í»§¶ËµÇÂ½ÌìÊı:" + ContinuousDays + "Ìì");
-							sender.sendMessage(ChatColor.YELLOW + "Íæ¼Ò½ñÈÕÊ¹ÓÃ×¨ÓÃ¿Í»§¶Ë·ÖÖÓÊı:" + OnlineMinute + "·ÖÖÓ,³¬¹ı120·Ö½«¼ÆÈëÁ¬ĞøµÇÂ½ÌìÊı¡£");
-							sender.sendMessage(ChatColor.YELLOW + "Ì×²Íµ½ÆÚÈÕ: " + getDateString(ExpireTime) + " ÔÚ´ËÖ®Ç°µÄÖÜÎåÁùÈÕÄúµÄÓÎÏ·Ê±¼ä²»ÊÜ²»ÏŞÖÆ¡£");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥å‰©ä½™å‰©ä½™æ—¶é•¿:" + TodayLimit + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ç´¯ç§¯ä»»åŠ¡å¥–åŠ±æ—¶é•¿:" + AwardMinute + "åˆ†é’Ÿ");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶è¿ç»­ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯ç™»é™†å¤©æ•°:" + ContinuousDays + "å¤©");
+							sender.sendMessage(ChatColor.YELLOW + "ç©å®¶ä»Šæ—¥ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯åˆ†é’Ÿæ•°:" + OnlineMinute + "åˆ†é’Ÿ,è¶…è¿‡120åˆ†å°†è®¡å…¥è¿ç»­ç™»é™†å¤©æ•°ã€‚");
+							sender.sendMessage(ChatColor.YELLOW + "å¥—é¤åˆ°æœŸæ—¥: " + getDateString(ExpireTime) + " åœ¨æ­¤ä¹‹å‰çš„å‘¨äº”å…­æ—¥æ‚¨çš„æ¸¸æˆæ—¶é—´ä¸å—ä¸é™åˆ¶ã€‚");
 						} else if (ComboType.equals("C") || ComboType.equals("A")) {
-							sender.sendMessage(ChatColor.YELLOW + "Ì×²Íµ½ÆÚÈÕ: " + getDateString(ExpireTime) + " ÔÚ´ËÖ®Ç°ÄúµÄÓÎÏ·Ê±¼ä¶¼²»ÊÜ²»ÏŞÖÆ¡£");
+							sender.sendMessage(ChatColor.YELLOW + "å¥—é¤åˆ°æœŸæ—¥: " + getDateString(ExpireTime) + " åœ¨æ­¤ä¹‹å‰æ‚¨çš„æ¸¸æˆæ—¶é—´éƒ½ä¸å—ä¸é™åˆ¶ã€‚");
 						} else {
-							sender.sendMessage(ChatColor.RED + "×ğ¹óµÄÓÀ¾ÃÍæ¼Ò£¬ÄúµÄÔÚÏßÊ±³¤²»ÊÜÏŞÖÆ£¡");
+							sender.sendMessage(ChatColor.RED + "å°Šè´µçš„æ°¸ä¹…ç©å®¶ï¼Œæ‚¨çš„åœ¨çº¿æ—¶é•¿ä¸å—é™åˆ¶ï¼");
 						}
 						return true;
 					} else {
-						sender.sendMessage("ÕâÌõÃüÁîÖ»ÄÜÓÉÍæ¼ÒÖ´ĞĞ");
+						sender.sendMessage("è¿™æ¡å‘½ä»¤åªèƒ½ç”±ç©å®¶æ‰§è¡Œ");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("today")) {
@@ -223,13 +223,13 @@ public class PlayerManagerMain extends JavaPlugin {
 						SQLData.Open();
 						if (SQLData.HasPlayer(args[1])) {
 							SQLData.SetTodayLimitMinute(args[1], Integer.parseInt(args[2]));
-							sender.sendMessage(ChatColor.BLUE + "³É¹¦Éè¶¨Íæ¼Ò " + args[1] + " µÄ·ÖÖÓÊıÎª " + args[2]);
+							sender.sendMessage(ChatColor.BLUE + "æˆåŠŸè®¾å®šç©å®¶ " + args[1] + " çš„åˆ†é’Ÿæ•°ä¸º " + args[2]);
 						} else {
-							sender.sendMessage(ChatColor.BLUE + "Ã»ÓĞÕâ¸öÍæ¼Ò");
+							sender.sendMessage(ChatColor.BLUE + "æ²¡æœ‰è¿™ä¸ªç©å®¶");
 						}
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm today Íæ¼Ò ·ÖÖÓÊı");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm today ç©å®¶ åˆ†é’Ÿæ•°");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("award")) {
@@ -240,25 +240,25 @@ public class PlayerManagerMain extends JavaPlugin {
 							if (!sender.isOp()) {
 								int HasAwardMinute = SQLData.GetAwardMinute(sender.getName());
 								if (HasAwardMinute < Integer.parseInt(args[2])) {
-									sender.sendMessage(ChatColor.BLUE + "ÄãµÄ¿ÉÓÃ½±Àø·ÖÖÓÊıÎª" + HasAwardMinute + "²»×ãÒÔÍê³ÉÕâ´ÎÍæ¼Ò·ÖÖÓÊı½±Àø");
+									sender.sendMessage(ChatColor.BLUE + "ä½ çš„å¯ç”¨å¥–åŠ±åˆ†é’Ÿæ•°ä¸º" + HasAwardMinute + "ä¸è¶³ä»¥å®Œæˆè¿™æ¬¡ç©å®¶åˆ†é’Ÿæ•°å¥–åŠ±");
 									return true;
 								} else {
 									HasAwardMinute = HasAwardMinute - Integer.parseInt(args[2]);
 									SQLData.SetAwardMinute(sender.getName(), HasAwardMinute);
-									sender.sendMessage(ChatColor.BLUE + "¿ÉÓÃ½±ÀøÔÚÏßÊ±¼äÊ£Óà" + HasAwardMinute + "·ÖÖÓ¡£");
+									sender.sendMessage(ChatColor.BLUE + "å¯ç”¨å¥–åŠ±åœ¨çº¿æ—¶é—´å‰©ä½™" + HasAwardMinute + "åˆ†é’Ÿã€‚");
 								}
 							}
 							int AwardMinute = SQLData.GetAwardMinute(args[1]);
-							sender.sendMessage(ChatColor.BLUE + "Íæ¼Ò " + args[1] + " µÄ·şÎñÆ÷ÈÎÎñ½±Àø·ÖÖÓÊıÎª " + AwardMinute);
+							sender.sendMessage(ChatColor.BLUE + "ç©å®¶ " + args[1] + " çš„æœåŠ¡å™¨ä»»åŠ¡å¥–åŠ±åˆ†é’Ÿæ•°ä¸º " + AwardMinute);
 							AwardMinute += Integer.parseInt(args[2]);
 							SQLData.SetAwardMinute(args[1], AwardMinute);
-							sender.sendMessage(ChatColor.BLUE + "³É¹¦Ôö¼ÓÍæ¼Ò " + args[1] + " µÄ·ÖÖÓÊı " + args[2] + " ·ÖÖÓ£¬µ±Ç°Íæ¼ÒÓµÓĞ" + AwardMinute + "ÈÎÎñ½±Àø·ÖÖÓ¡£");
+							sender.sendMessage(ChatColor.BLUE + "æˆåŠŸå¢åŠ ç©å®¶ " + args[1] + " çš„åˆ†é’Ÿæ•° " + args[2] + " åˆ†é’Ÿï¼Œå½“å‰ç©å®¶æ‹¥æœ‰" + AwardMinute + "ä»»åŠ¡å¥–åŠ±åˆ†é’Ÿã€‚");
 						} else {
-							sender.sendMessage(ChatColor.BLUE + "Ã»ÓĞÕâ¸öÍæ¼Ò");
+							sender.sendMessage(ChatColor.BLUE + "æ²¡æœ‰è¿™ä¸ªç©å®¶");
 						}
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm award Íæ¼Ò ·ÖÖÓÊı");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm award ç©å®¶ åˆ†é’Ÿæ•°");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("relimit")) {
@@ -266,10 +266,10 @@ public class PlayerManagerMain extends JavaPlugin {
 						return true;
 					if (args.length == 2) {
 						SQLData.UpdateLimitTime(Integer.parseInt(args[1]));
-						sender.sendMessage(ChatColor.BLUE + "³É¹¦Ë¢ĞÂËùÓĞÍæ¼ÒµÄ·ÖÖÓÊı");
+						sender.sendMessage(ChatColor.BLUE + "æˆåŠŸåˆ·æ–°æ‰€æœ‰ç©å®¶çš„åˆ†é’Ÿæ•°");
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm relimit ·ÖÖÓÊı");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm relimit åˆ†é’Ÿæ•°");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("reaward")) {
@@ -277,15 +277,15 @@ public class PlayerManagerMain extends JavaPlugin {
 						return true;
 					if (args.length == 2) {
 						SQLData.UpdateAwardTime(Integer.parseInt(args[1]));
-						sender.sendMessage(ChatColor.BLUE + "³É¹¦Ë¢ĞÂËùÓĞÌ×²ÍÍæ¼ÒµÄ½±Àø·ÖÖÓÊı");
+						sender.sendMessage(ChatColor.BLUE + "æˆåŠŸåˆ·æ–°æ‰€æœ‰å¥—é¤ç©å®¶çš„å¥–åŠ±åˆ†é’Ÿæ•°");
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm reaward ·ÖÖÓÊı");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm reaward åˆ†é’Ÿæ•°");
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("whitelist")) {
 					if (!sender.hasPermission("PlayerManager.Whitelist")) {
-						sender.sendMessage(ChatColor.RED + "ÄãÃ»ÓĞÈ¨ÏŞÌí¼Ó£¡");
+						sender.sendMessage(ChatColor.RED + "ä½ æ²¡æœ‰æƒé™æ·»åŠ ï¼");
 						return true;
 					}
 					if (args.length == 2) {
@@ -293,35 +293,35 @@ public class PlayerManagerMain extends JavaPlugin {
 						for (i = 0; i < 3; i++) {
 							if (SetWhitelist[i].equals("Meano")) {
 								SetWhitelist[i] = args[1];
-								sender.sendMessage(ChatColor.BLUE + args[1] + "³É¹¦Ìí¼Óµ½£¬°×Ãûµ¥ÁĞ±í¡£");
+								sender.sendMessage(ChatColor.BLUE + args[1] + "æˆåŠŸæ·»åŠ åˆ°ï¼Œç™½åå•åˆ—è¡¨ã€‚");
 								return true;
 							}
 						}
-						sender.sendMessage(ChatColor.BLUE + "°×Ãûµ¥ÁĞ±íÒÑÂú£¬Çå³ıÁË" + SetWhitelist[0] + SetWhitelist[1] + SetWhitelist[2] + "µÄÔ¤¶©°×Ãûµ¥£¬ÈôÆäÖĞÍæ¼Ò»¹Ã»½øÀ´£¬ÇëÖØĞÂÌí¼Ó¡£");
+						sender.sendMessage(ChatColor.BLUE + "ç™½åå•åˆ—è¡¨å·²æ»¡ï¼Œæ¸…é™¤äº†" + SetWhitelist[0] + SetWhitelist[1] + SetWhitelist[2] + "çš„é¢„è®¢ç™½åå•ï¼Œè‹¥å…¶ä¸­ç©å®¶è¿˜æ²¡è¿›æ¥ï¼Œè¯·é‡æ–°æ·»åŠ ã€‚");
 						SetWhitelist[0] = args[1];
 						SetWhitelist[1] = "Meano";
 						SetWhitelist[2] = "Meano";
-						sender.sendMessage(ChatColor.BLUE + "³É¹¦Ìí¼Ó°×Ãûµ¥Ô¤¶©ÁĞ±í¡£");
+						sender.sendMessage(ChatColor.BLUE + "æˆåŠŸæ·»åŠ ç™½åå•é¢„è®¢åˆ—è¡¨ã€‚");
 						return true;
 					} else {
-						sender.sendMessage("²ÎÊı²»ÕıÈ·£º/pm whitelist Íæ¼ÒID");
+						sender.sendMessage("å‚æ•°ä¸æ­£ç¡®ï¼š/pm whitelist ç©å®¶ID");
 						return true;
 					}
 				}else if(args[0].equalsIgnoreCase("info")){
 					if(sender instanceof Player){
 						Player Pinfo = (Player) sender;
-						sender.sendMessage(ChatColor.BLUE+"Ç×°®µÄÍæ¼Ò ["+Pinfo.getName()+"] ÄãÔÚ"+getDateString(Pinfo.getFirstPlayed())+"À´µ½ÁËÕâ¸ö·şÎñÆ÷¡£");
+						sender.sendMessage(ChatColor.BLUE+"äº²çˆ±çš„ç©å®¶ ["+Pinfo.getName()+"] ä½ åœ¨"+getDateString(Pinfo.getFirstPlayed())+"æ¥åˆ°äº†è¿™ä¸ªæœåŠ¡å™¨ã€‚");
 						return true;
 					}else{
-						sender.sendMessage("Ö»ÄÜÓÉÍæ¼ÒÊ¹ÓÃÕâÌõÖ¸Áî£¡");
+						sender.sendMessage("åªèƒ½ç”±ç©å®¶ä½¿ç”¨è¿™æ¡æŒ‡ä»¤ï¼");
 					}
 					
 				}else {
-					sender.sendMessage("/pm me ²éÑ¯×Ô¼ºµÄÊ±³¤»òÌ×²ÍÊ£ÓàÇé¿ö");
+					sender.sendMessage("/pm me æŸ¥è¯¢è‡ªå·±çš„æ—¶é•¿æˆ–å¥—é¤å‰©ä½™æƒ…å†µ");
 					return true;
 				}
 			} else {
-				sender.sendMessage("/pm me ²éÑ¯×Ô¼ºµÄÊ±³¤»òÌ×²ÍÊ£ÓàÇé¿ö");
+				sender.sendMessage("/pm me æŸ¥è¯¢è‡ªå·±çš„æ—¶é•¿æˆ–å¥—é¤å‰©ä½™æƒ…å†µ");
 				return true;
 			}
 		}

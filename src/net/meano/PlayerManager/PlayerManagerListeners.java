@@ -1,4 +1,4 @@
-package net.meano.PlayerManager;
+ï»¿package net.meano.PlayerManager;
 
 import net.meano.DataBase.ClientStatu;
 
@@ -20,24 +20,24 @@ public class PlayerManagerListeners implements Listener {
 	PlayerManagerMain PMM;
 	PermissionsPlugin Perm;
 	
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	public PlayerManagerListeners(PlayerManagerMain GetPlugin) {
 		PMM = GetPlugin;
 		Perm = (PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit");
 	}
 	
-	//Íæ¼ÒÔ¤µÇÂ½ÊÂ¼ş
+	//ç©å®¶é¢„ç™»é™†äº‹ä»¶
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
 		String PreLoginIP = event.getAddress().getHostName();
 		String PlayerName = event.getName();
 		OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
-		// °×Ãûµ¥
+		// ç™½åå•
 		if (!player.isWhitelisted()) {
-			PMM.getLogger().info("Íæ¼Ò²»ÔÚ°×Ãûµ¥ÖĞ");
+			PMM.getLogger().info("ç©å®¶ä¸åœ¨ç™½åå•ä¸­");
 			for (String p : PMM.SetWhitelist) {
 				if (p.equalsIgnoreCase(PlayerName)) {
-					Bukkit.broadcast(p + "ÔÚ°×Ãûµ¥ÖĞÔ¤¶©ÁĞ±íÖĞ£¬³É¹¦Ìí¼Ó°×Ãûµ¥£¡", "PlayerManager.Whitelist");
+					Bukkit.broadcast(p + "åœ¨ç™½åå•ä¸­é¢„è®¢åˆ—è¡¨ä¸­ï¼ŒæˆåŠŸæ·»åŠ ç™½åå•ï¼", "PlayerManager.Whitelist");
 					Bukkit.getOfflinePlayer(event.getUniqueId()).setWhitelisted(true);
 				}
 			}
@@ -54,29 +54,29 @@ public class PlayerManagerListeners implements Listener {
 			}
 		}
 		if (isOnline) {
-			Bukkit.broadcast("Íæ¼Ò" + OnlinePlayerName + "ÊÔÍ¼ÓÃ" + event.getName() + "µÇÂ½ÓÎÏ·£¬ÓĞĞ¡ºÅµÇÂ½ÏÓÒÉ£¬ipµØÖ·" + PreLoginIP, "PlayerManager.Warn");
+			Bukkit.broadcast("ç©å®¶" + OnlinePlayerName + "è¯•å›¾ç”¨" + event.getName() + "ç™»é™†æ¸¸æˆï¼Œæœ‰å°å·ç™»é™†å«Œç–‘ï¼Œipåœ°å€" + PreLoginIP, "PlayerManager.Warn");
 		}
 		PMM.SQLData.Close();
 		PMM.SQLData.Open();
-		// ´æÔÚ´ËÍæ¼Ò
+		// å­˜åœ¨æ­¤ç©å®¶
 		if (PMM.SQLData.HasPlayer(PlayerName)) {
 			if (PMM.SQLData.GetComboType(PlayerName).equals("Normal")) {
 				if ((PMM.SQLData.GetTodayLimitMinute(PlayerName) <= 0) && (PMM.SQLData.GetAwardMinute(PlayerName) <= 0)) {
-					event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "Ç×°®µÄÃâ·ÑÍæ¼Ò£¬ÄúµÄÃâ·ÑÊ±³¤ºÍÎª·şÎñÆ÷×öÈÎÎñ»ñµÃµÄÊ±³¤ÒÑ¾­ÓÃÍê£¬Äú¿ÉÑ¡Ôñ¹ºÂò·şÎñÆ÷ÎŞÏŞÊ±Ì×²Í£¬»òµÈ´ı6µã»ò18µãµÄÊ±³¤¸üĞÂÖØĞÂµÇÂ½ÓÎÏ·¡£");
+					event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "äº²çˆ±çš„å…è´¹ç©å®¶ï¼Œæ‚¨çš„å…è´¹æ—¶é•¿å’Œä¸ºæœåŠ¡å™¨åšä»»åŠ¡è·å¾—çš„æ—¶é•¿å·²ç»ç”¨å®Œï¼Œæ‚¨å¯é€‰æ‹©è´­ä¹°æœåŠ¡å™¨æ— é™æ—¶å¥—é¤ï¼Œæˆ–ç­‰å¾…6ç‚¹æˆ–18ç‚¹çš„æ—¶é•¿æ›´æ–°é‡æ–°ç™»é™†æ¸¸æˆã€‚");
 				}
 			} else if (PMM.SQLData.GetComboType(PlayerName).equals("B")) {
 				String Week = PMM.getWeekString(System.currentTimeMillis());
-				if (Week.equals("ĞÇÆÚÈÕ") || Week.equals("ĞÇÆÚÁù") || Week.equals("ĞÇÆÚÎå")) {
+				if (Week.equals("æ˜ŸæœŸæ—¥") || Week.equals("æ˜ŸæœŸå…­") || Week.equals("æ˜ŸæœŸäº”")) {
 				} else {
 					if ((PMM.SQLData.GetTodayLimitMinute(PlayerName) <= 0) && (PMM.SQLData.GetAwardMinute(PlayerName) <= 0)) {
-						event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "Ç×°®µÄÌ×²ÍBÍæ¼Ò£¬½ñÌìÊÇ" + Week + "£¬ÄúµÄÃâ·ÑÊ±³¤ºÍÎª·şÎñÆ÷×öÈÎÎñ»ñµÃµÄÊ±³¤ÒÑ¾­ÓÃÍê£¬Äú¿ÉÑ¡Ôñ²¹²î¼Û¹ºÂò·şÎñÆ÷ÎŞÏŞÊ±Ì×²ÍA£¬»òµÈ´ı6µã»ò18µãµÄÊ±³¤¸üĞÂÖØĞÂµÇÂ½ÓÎÏ·¡£");
+						event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "äº²çˆ±çš„å¥—é¤Bç©å®¶ï¼Œä»Šå¤©æ˜¯" + Week + "ï¼Œæ‚¨çš„å…è´¹æ—¶é•¿å’Œä¸ºæœåŠ¡å™¨åšä»»åŠ¡è·å¾—çš„æ—¶é•¿å·²ç»ç”¨å®Œï¼Œæ‚¨å¯é€‰æ‹©è¡¥å·®ä»·è´­ä¹°æœåŠ¡å™¨æ— é™æ—¶å¥—é¤Aï¼Œæˆ–ç­‰å¾…6ç‚¹æˆ–18ç‚¹çš„æ—¶é•¿æ›´æ–°é‡æ–°ç™»é™†æ¸¸æˆã€‚");
 					}
 				}
 			}
 		}
 	}
 	
-	//Íæ¼ÒµÇÂ½ÓÎÏ·ÊÂ¼ş
+	//ç©å®¶ç™»é™†æ¸¸æˆäº‹ä»¶
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String PlayerName = event.getPlayer().getName();
@@ -84,33 +84,33 @@ public class PlayerManagerListeners implements Listener {
 		Player player = event.getPlayer();
 		boolean FirstPlay = false;
 		int ContinuousDays = -1;
-		// °×Ãûµ¥
+		// ç™½åå•
 		for (int i = 0; i < 3; i++) {
 			if (PMM.SetWhitelist[i].equalsIgnoreCase(PlayerName)) {
 				PMM.SetWhitelist[i] = "Meano";
 				player.setWhitelisted(true);
-				PMM.getLogger().info("°×Ãûµ¥ÑéÖ¤¿ªÊ¼´¦Àí£º " + PlayerName + " ¼ÓÈë°×Ãûµ¥£¡");
+				PMM.getLogger().info("ç™½åå•éªŒè¯å¼€å§‹å¤„ç†ï¼š " + PlayerName + " åŠ å…¥ç™½åå•ï¼");
 			}
 		}
 		PMM.SQLData.Close();
 		PMM.SQLData.Open();
 		if (!PMM.SQLData.HasPlayer(player.getName())) {
 			PMM.SQLData.AddNewPlayer(player.getName(), player.getUniqueId().toString());
-			player.sendMessage(ChatColor.AQUA + "Ç×°®µÄÍæ¼Ò£¬ÄãºÃ£¡Òò·şÎñÆ÷µÄÔËĞĞĞèÒª´óÁ¿µÄÊ±¼äºÍ½ğÇ®½øĞĞÎ¬»¤£¬ÏÖ¸Ä±äÖÆ¶È¡£");
-			player.sendMessage(ChatColor.AQUA + "Îª·şÎñÆ÷³¤¾Ã·¢Õ¹£¬ÓÖ²»ÆÆ»µÓÎÏ·ÄÚ¹«Æ½£¬ÏŞ¶¨Ãâ·ÑÍæ¼ÒÃ¿ÌìÓĞ4Ğ¡Ê±ÓÎÏ·Ê±¼ä¡£");
-			player.sendMessage(ChatColor.AQUA + "Ö®Ç°¾èÖú¹ı·şÎñÆ÷µÄ½«»ñµÃ×¨ÏíÌ×²Í£¬³¤ÆÚÔÚ·şÎñÆ÷ÓÎÏ·µÄÍæ¼Ò¿ÉÒÔÑ¡ÔñÒÔÏÂÁ½ÖÖÌ×²Í£º");
-			player.sendMessage(ChatColor.GREEN + "Ì×²ÍA£º25Ôª/ÔÂ£¬Ò»¸öÔÂÄÚÓÎÏ·²»ÏŞÊ±£¬²¢¸øÓèµ±ÔÂ" + ChatColor.YELLOW + "10´Î³ÆºÅ¸ü¸ÄºÍ2´ÎÆ¤·ôĞŞ¸Ä¡£");
-			player.sendMessage(ChatColor.GREEN + "Ì×²ÍB£º12Ôª/ÔÂ£¬Ò»¸öÔÂÄÚÖÜÎåÁùÈÕ²»ÏŞÊ±£¬²¢¸øÓèµ±ÔÂ" + ChatColor.YELLOW + "3´Î³ÆºÅ¸ü¸Ä¡£");
-			PMM.getLogger().info(PlayerName + " ĞÂÌí¼ÓÈëÊı¾İ¿â");
+			player.sendMessage(ChatColor.AQUA + "äº²çˆ±çš„ç©å®¶ï¼Œä½ å¥½ï¼å› æœåŠ¡å™¨çš„è¿è¡Œéœ€è¦å¤§é‡çš„æ—¶é—´å’Œé‡‘é’±è¿›è¡Œç»´æŠ¤ï¼Œç°æ”¹å˜åˆ¶åº¦ã€‚");
+			player.sendMessage(ChatColor.AQUA + "ä¸ºæœåŠ¡å™¨é•¿ä¹…å‘å±•ï¼Œåˆä¸ç ´åæ¸¸æˆå†…å…¬å¹³ï¼Œé™å®šå…è´¹ç©å®¶æ¯å¤©æœ‰4å°æ—¶æ¸¸æˆæ—¶é—´ã€‚");
+			player.sendMessage(ChatColor.AQUA + "ä¹‹å‰æåŠ©è¿‡æœåŠ¡å™¨çš„å°†è·å¾—ä¸“äº«å¥—é¤ï¼Œé•¿æœŸåœ¨æœåŠ¡å™¨æ¸¸æˆçš„ç©å®¶å¯ä»¥é€‰æ‹©ä»¥ä¸‹ä¸¤ç§å¥—é¤ï¼š");
+			player.sendMessage(ChatColor.GREEN + "å¥—é¤Aï¼š25å…ƒ/æœˆï¼Œä¸€ä¸ªæœˆå†…æ¸¸æˆä¸é™æ—¶ï¼Œå¹¶ç»™äºˆå½“æœˆ" + ChatColor.YELLOW + "10æ¬¡ç§°å·æ›´æ”¹å’Œ2æ¬¡çš®è‚¤ä¿®æ”¹ã€‚");
+			player.sendMessage(ChatColor.GREEN + "å¥—é¤Bï¼š12å…ƒ/æœˆï¼Œä¸€ä¸ªæœˆå†…å‘¨äº”å…­æ—¥ä¸é™æ—¶ï¼Œå¹¶ç»™äºˆå½“æœˆ" + ChatColor.YELLOW + "3æ¬¡ç§°å·æ›´æ”¹ã€‚");
+			PMM.getLogger().info(PlayerName + " æ–°æ·»åŠ å…¥æ•°æ®åº“");
 		} else {
-			//ÅĞ¶ÏÊÇ·ñÊÇ½ñÌìµÚÒ»´ÎµÇÂ½
+			//åˆ¤æ–­æ˜¯å¦æ˜¯ä»Šå¤©ç¬¬ä¸€æ¬¡ç™»é™†
 			FirstPlay = PMM.SQLData.isTodayFirstPlay(PlayerName);
 			if (FirstPlay) {
-				PMM.getLogger().info(PlayerName + " ½ñÌìµÚÒ»´ÎµÇÂ½£¬¾àÉÏÒ»´ÎµÇÂ½ÒÑÓĞ " + PMM.SQLData.CalculateDaysLast(PlayerName) + " Ìì¡£");
+				PMM.getLogger().info(PlayerName + " ä»Šå¤©ç¬¬ä¸€æ¬¡ç™»é™†ï¼Œè·ä¸Šä¸€æ¬¡ç™»é™†å·²æœ‰ " + PMM.SQLData.CalculateDaysLast(PlayerName) + " å¤©ã€‚");
 				PMM.SQLData.UpdateTodayFirstLogin(PlayerName);
 				ContinuousDays = CalculateContinuousDays(player);
 			} else {
-				PMM.getLogger().info(PlayerName + "½ñÈÕ¶à´ÎµÇÂ½£¬Ê£Óà¿ÉÓÃÔÚÏßÊ±¼ä " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "·Ö¡£");
+				PMM.getLogger().info(PlayerName + "ä»Šæ—¥å¤šæ¬¡ç™»é™†ï¼Œå‰©ä½™å¯ç”¨åœ¨çº¿æ—¶é—´ " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "åˆ†ã€‚");
 			}
 			PlayerCombo = PMM.SQLData.GetComboType(PlayerName);
 			if (PlayerCombo.equals("Normal")) {
@@ -128,12 +128,12 @@ public class PlayerManagerListeners implements Listener {
 		}
 	}
 
-	//NormalÌ×²ÍµÇÂ½´¦Àí
+	//Normalå¥—é¤ç™»é™†å¤„ç†
 	public void NormalLogin(Player player){
-		player.sendMessage(ChatColor.GREEN + "Ç×°®µÄÃâ·ÑÍæ¼Ò£¬ÄãºÃ£¡·şÎñÆ÷µÄÔËĞĞĞèÒª´óÁ¿µÄÊ±¼äºÍ½ğÇ®½øĞĞÎ¬»¤¡£");
-		player.sendMessage(ChatColor.GREEN + "ÎªÁË·şÎñÆ÷³¤¾Ã·¢Õ¹£¬ÓÖ²»ÆÆ»µÓÎÏ·ÄÚ¹«Æ½£¬ÏŞ¶¨Ãâ·ÑÍæ¼ÒÃ¿Ìì4Ğ¡Ê±µÄÓÎÏ·Ê±¼ä");
-		player.sendMessage(ChatColor.GREEN + "µ½ÏÂ´Î6µã»ò18µãÊ±³¤¸üĞÂÇ°»¹Ê£Óà" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "·ÖÖÓÓÎÏ·Ê±¼ä");
-		player.sendMessage(ChatColor.GREEN + "¿ÉÒÔÍ¨¹ıÖ§¸¶±¦£¬Î¢ĞÅ£¬µç»°¿¨Ö§¸¶²»ÏŞÊ±Ì×²Í£¬ÏêÑ¯Èº326355263¡£Ê¹ÓÃ/pm me²éÑ¯Ê±³¤¡£");
+		player.sendMessage(ChatColor.GREEN + "äº²çˆ±çš„å…è´¹ç©å®¶ï¼Œä½ å¥½ï¼æœåŠ¡å™¨çš„è¿è¡Œéœ€è¦å¤§é‡çš„æ—¶é—´å’Œé‡‘é’±è¿›è¡Œç»´æŠ¤ã€‚");
+		player.sendMessage(ChatColor.GREEN + "ä¸ºäº†æœåŠ¡å™¨é•¿ä¹…å‘å±•ï¼Œåˆä¸ç ´åæ¸¸æˆå†…å…¬å¹³ï¼Œé™å®šå…è´¹ç©å®¶æ¯å¤©4å°æ—¶çš„æ¸¸æˆæ—¶é—´");
+		player.sendMessage(ChatColor.GREEN + "åˆ°ä¸‹æ¬¡6ç‚¹æˆ–18ç‚¹æ—¶é•¿æ›´æ–°å‰è¿˜å‰©ä½™" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "åˆ†é’Ÿæ¸¸æˆæ—¶é—´");
+		player.sendMessage(ChatColor.GREEN + "å¯ä»¥é€šè¿‡æ”¯ä»˜å®ï¼Œå¾®ä¿¡ï¼Œç”µè¯å¡æ”¯ä»˜ä¸é™æ—¶å¥—é¤ï¼Œè¯¦è¯¢ç¾¤326355263ã€‚ä½¿ç”¨/pm meæŸ¥è¯¢æ—¶é•¿ã€‚");
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				Perm.RemoveGroup(player, GroupofPlayer.getName());
@@ -141,7 +141,7 @@ public class PlayerManagerListeners implements Listener {
 		}
 	}
 	
-	//AÌ×²ÍµÇÂ½´¦Àí
+	//Aå¥—é¤ç™»é™†å¤„ç†
 	public void ALogin(Player player){
 		boolean ComboSuit = false;
 		String PlayerName = player.getName();
@@ -149,13 +149,13 @@ public class PlayerManagerListeners implements Listener {
 		if (ExpireTime - System.currentTimeMillis() < 1000 * 60 * 60 * 8) {
 			PMM.SQLData.SetComboType(PlayerName, "Normal");
 			PMM.SQLData.SetTodayLimitMinute(PlayerName, 120);
-			player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄAÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-			player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²ÍÒÑ¾­µ½ÆÚ£¬ÒÑÎªÄú×ª»»ÎªÆÕÍ¨Ãâ·ÑÍæ¼Ò£¬Ã¿ÈÕÒÀ¾ÉÓĞ4Ğ¡Ê±Ãâ·ÑÓÎÏ·Ê±¼ä£¬×£ÍæµÄÓä¿ì£¡");
+			player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Aå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+			player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤å·²ç»åˆ°æœŸï¼Œå·²ä¸ºæ‚¨è½¬æ¢ä¸ºæ™®é€šå…è´¹ç©å®¶ï¼Œæ¯æ—¥ä¾æ—§æœ‰4å°æ—¶å…è´¹æ¸¸æˆæ—¶é—´ï¼Œç¥ç©çš„æ„‰å¿«ï¼");
 		} else {
-			player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄAÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-			player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²Íµ½ÆÚÈÕÎª:" + PMM.getDateString(ExpireTime) + "£¬×£ÍæµÄÓä¿ì£¡");
+			player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Aå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+			player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤åˆ°æœŸæ—¥ä¸º:" + PMM.getDateString(ExpireTime) + "ï¼Œç¥ç©çš„æ„‰å¿«ï¼");
 		}
-		// Ì×²ÍAÈ¨ÏŞ´¦Àí
+		// å¥—é¤Aæƒé™å¤„ç†
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				if (GroupofPlayer.getName().equals("ComboA")) {
@@ -169,7 +169,7 @@ public class PlayerManagerListeners implements Listener {
 			Perm.AddGroup(player, "ComboA");
 	}
 	
-	//BÌ×²ÍµÇÂ½´¦Àí
+	//Bå¥—é¤ç™»é™†å¤„ç†
 	public void BLogin(Player player){
 		boolean ComboSuit = false;
 		String PlayerName = player.getName();
@@ -177,19 +177,19 @@ public class PlayerManagerListeners implements Listener {
 		if (ExpireTime - System.currentTimeMillis() < 1000 * 60 * 60 * 8) {
 			PMM.SQLData.SetComboType(PlayerName, "Normal");
 			PMM.SQLData.SetTodayLimitMinute(PlayerName, 120);
-			player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄBÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-			player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²ÍÒÑ¾­µ½ÆÚ£¬ÒÑÎªÄú×ª»»ÎªÆÕÍ¨Ãâ·ÑÍæ¼Ò£¬Ã¿ÈÕÒÀ¾ÉÓĞ4Ğ¡Ê±Ãâ·ÑÓÎÏ·Ê±¼ä£¬×£ÍæµÄÓä¿ì£¡");
+			player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Bå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+			player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤å·²ç»åˆ°æœŸï¼Œå·²ä¸ºæ‚¨è½¬æ¢ä¸ºæ™®é€šå…è´¹ç©å®¶ï¼Œæ¯æ—¥ä¾æ—§æœ‰4å°æ—¶å…è´¹æ¸¸æˆæ—¶é—´ï¼Œç¥ç©çš„æ„‰å¿«ï¼");
 		} else {
 			String Week = PMM.getWeekString(System.currentTimeMillis());
-			if (Week.equals("ĞÇÆÚÈÕ") || Week.equals("ĞÇÆÚÁù") || Week.equals("ĞÇÆÚÎå")) {
-				player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄBÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-				player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²Íµ½ÆÚÈÕÎª:" + PMM.getDateString(ExpireTime) + "£¬×£ÍæµÄÓä¿ì£¡");
+			if (Week.equals("æ˜ŸæœŸæ—¥") || Week.equals("æ˜ŸæœŸå…­") || Week.equals("æ˜ŸæœŸäº”")) {
+				player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Bå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+				player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤åˆ°æœŸæ—¥ä¸º:" + PMM.getDateString(ExpireTime) + "ï¼Œç¥ç©çš„æ„‰å¿«ï¼");
 			} else {
-				player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄBÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-				player.sendMessage(ChatColor.YELLOW + "½ñÌìÊÇ¹¤×÷ÈÕ£¬ÄúÖ»ÓĞÃâ·ÑÓÎÏ·Ê±¼ä£¬Ê£ÓàÃâ·ÑÊ±¼ä£º" + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "·ÖÖÓ£¬×£ÍæµÄÓä¿ì£¡");
+				player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Bå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+				player.sendMessage(ChatColor.YELLOW + "ä»Šå¤©æ˜¯å·¥ä½œæ—¥ï¼Œæ‚¨åªæœ‰å…è´¹æ¸¸æˆæ—¶é—´ï¼Œå‰©ä½™å…è´¹æ—¶é—´ï¼š" + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "åˆ†é’Ÿï¼Œç¥ç©çš„æ„‰å¿«ï¼");
 			}
 		}
-		// Ì×²ÍBÈ¨ÏŞ´¦Àí
+		// å¥—é¤Bæƒé™å¤„ç†
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				if (GroupofPlayer.getName().equals("ComboB")) {
@@ -203,7 +203,7 @@ public class PlayerManagerListeners implements Listener {
 			Perm.AddGroup(player, "ComboB");
 	}
 	
-	//CÌ×²ÍµÇÂ½´¦Àí
+	//Cå¥—é¤ç™»é™†å¤„ç†
 	public void CLogin(Player player){
 		boolean ComboSuit = false;
 		String PlayerName = player.getName();
@@ -213,19 +213,19 @@ public class PlayerManagerListeners implements Listener {
 		if (SpaceTime > 1000 * 60 * 60 * 24) {
 			ExpireTime += SpaceTime - 1000 * 60 * 60 * 24;
 			PMM.SQLData.SetComboExpireTime(player.getName(), ExpireTime);
-			player.sendMessage("CÌ×²ÍÍæ¼Ò" + player.getName() + "ÑÓÊ±" + (SpaceTime / (1000 * 60 * 60 * 24) - 1) + "Ìì");
-			PMM.getLogger().info("CÌ×²ÍÍæ¼Ò" + player.getName() + "ÑÓÊ±" + (SpaceTime / (1000 * 60 * 60 * 24) - 1) + "Ìì");
+			player.sendMessage("Cå¥—é¤ç©å®¶" + player.getName() + "å»¶æ—¶" + (SpaceTime / (1000 * 60 * 60 * 24) - 1) + "å¤©");
+			PMM.getLogger().info("Cå¥—é¤ç©å®¶" + player.getName() + "å»¶æ—¶" + (SpaceTime / (1000 * 60 * 60 * 24) - 1) + "å¤©");
 		}
 		if (ExpireTime - System.currentTimeMillis() < 1000 * 60 * 60 * 8) {
 			PMM.SQLData.SetComboType(PlayerName, "Normal");
 			PMM.SQLData.SetTodayLimitMinute(PlayerName, 120);
-			player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄCÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-			player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²ÍÒÑ¾­µ½ÆÚ£¬ÒÑÎªÄú×ª»»ÎªÆÕÍ¨Ãâ·ÑÍæ¼Ò£¬Ã¿ÈÕÒÀ¾ÉÓĞ4Ğ¡Ê±Ãâ·ÑÓÎÏ·Ê±¼ä");
+			player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Cå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+			player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤å·²ç»åˆ°æœŸï¼Œå·²ä¸ºæ‚¨è½¬æ¢ä¸ºæ™®é€šå…è´¹ç©å®¶ï¼Œæ¯æ—¥ä¾æ—§æœ‰4å°æ—¶å…è´¹æ¸¸æˆæ—¶é—´");
 		} else {
-			player.sendMessage(ChatColor.YELLOW + "Ç×°®µÄCÌ×²ÍÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-			player.sendMessage(ChatColor.YELLOW + "ÄúµÄÌ×²Íµ½ÆÚÈÕÎª:" + PMM.getDateString(ExpireTime) + "£¬×£ÍæµÄÓä¿ì¡£");
+			player.sendMessage(ChatColor.YELLOW + "äº²çˆ±çš„Cå¥—é¤ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+			player.sendMessage(ChatColor.YELLOW + "æ‚¨çš„å¥—é¤åˆ°æœŸæ—¥ä¸º:" + PMM.getDateString(ExpireTime) + "ï¼Œç¥ç©çš„æ„‰å¿«ã€‚");
 		}
-		// Ì×²ÍCÈ¨ÏŞ´¦Àí
+		// å¥—é¤Cæƒé™å¤„ç†
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				if (GroupofPlayer.getName().equals("ComboC")) {
@@ -239,13 +239,13 @@ public class PlayerManagerListeners implements Listener {
 			Perm.AddGroup(player, "ComboC");
 	}
 	
-	//ForeverÌ×²ÍµÇÂ½´¦Àí
+	//Foreverå¥—é¤ç™»é™†å¤„ç†
 	public void ForeverLogin(Player player){
 		boolean ComboSuit = false;
 		//String PlayerName = player.getName();
-		player.sendMessage(ChatColor.RED + "Ç×°®µÄÓÀ¾ÃÍæ¼Ò£¬ÄãºÃ£¡¸ĞĞ»Äú¶Ô·şÎñÆ÷µÄÖ§³ÖÓë¸¶³ö£¡");
-		player.sendMessage(ChatColor.RED + "Äú¿ÉÒÔÏíÊÜÓÀ¾ÃÎŞÏŞÊ±µÄÍæÀÖ£¬×£ÍæµÄÓä¿ì¡£");
-		// Ì×²ÍForeverÈ¨ÏŞ´¦Àí
+		player.sendMessage(ChatColor.RED + "äº²çˆ±çš„æ°¸ä¹…ç©å®¶ï¼Œä½ å¥½ï¼æ„Ÿè°¢æ‚¨å¯¹æœåŠ¡å™¨çš„æ”¯æŒä¸ä»˜å‡ºï¼");
+		player.sendMessage(ChatColor.RED + "æ‚¨å¯ä»¥äº«å—æ°¸ä¹…æ— é™æ—¶çš„ç©ä¹ï¼Œç¥ç©çš„æ„‰å¿«ã€‚");
+		// å¥—é¤Foreveræƒé™å¤„ç†
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				if (GroupofPlayer.getName().equals("ComboA")) {
@@ -259,14 +259,14 @@ public class PlayerManagerListeners implements Listener {
 			Perm.AddGroup(player, "ComboA");
 	}
 	
-	//¼ÆËã½±ÀøÊ±¼ä
+	//è®¡ç®—å¥–åŠ±æ—¶é—´
 	public int CalculateContinuousDays(Player player){
 		String PlayerName = player.getName();
 		int ContinuousDays = 0;
 		if(PMM.SQLData.GetOnlineMinutes(PlayerName)>120){
-			ContinuousDays = PMM.SQLData.GetContinuousDays(PlayerName);		//Á¬ĞøµÇÂ½ÌìÊı
-			int AwardMinute = PMM.SQLData.GetAwardMinute(PlayerName);			//½±Àø·ÖÖÓÊı
-			//³ÖĞøµÇÂ½ÌìÊı+1
+			ContinuousDays = PMM.SQLData.GetContinuousDays(PlayerName);		//è¿ç»­ç™»é™†å¤©æ•°
+			int AwardMinute = PMM.SQLData.GetAwardMinute(PlayerName);			//å¥–åŠ±åˆ†é’Ÿæ•°
+			//æŒç»­ç™»é™†å¤©æ•°+1
 			ContinuousDays = ContinuousDays + 1;
 			PMM.SQLData.SetContinuousDays(PlayerName, ContinuousDays);
 			if(ContinuousDays < 7){
@@ -282,13 +282,13 @@ public class PlayerManagerListeners implements Listener {
 		return ContinuousDays;
 	}
 	
-	//Íæ¼ÒÍË³öÓÎÏ·ÊÂ¼ş
+	//ç©å®¶é€€å‡ºæ¸¸æˆäº‹ä»¶
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		String PlayerName = event.getPlayer().getName();
 		if(PMM.SQLData.GetClientStatu(PlayerName).equals(ClientStatu.Online)){
 			PMM.SQLData.SetClientStatu(PlayerName, ClientStatu.Offline);
-			PMM.getLogger().info("Ê¹ÓÃ×¨ÓÃ¿Í»§¶ËµÄÍæ¼Ò: " + PlayerName + "ÒÑ¾­ÀëÏß¡£");
+			PMM.getLogger().info("ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯çš„ç©å®¶: " + PlayerName + "å·²ç»ç¦»çº¿ã€‚");
 		}
 	}
 }

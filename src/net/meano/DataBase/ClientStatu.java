@@ -1,4 +1,4 @@
-package net.meano.DataBase;
+﻿package net.meano.DataBase;
 
 public enum ClientStatu {
 	Offline,

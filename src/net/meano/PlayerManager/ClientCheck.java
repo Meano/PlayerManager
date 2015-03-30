@@ -1,4 +1,4 @@
-package net.meano.PlayerManager;
+ï»¿package net.meano.PlayerManager;
 
 import net.meano.DataBase.ClientStatu;
 import org.bukkit.ChatColor;
@@ -20,18 +20,18 @@ public class ClientCheck implements Runnable {
 		if(!player.isOnline()) return;
 		String PlayerName = player.getName();
 		if(PMM.SQLData.GetClientStatu(PlayerName).equals(ClientStatu.Online)){
-			player.sendMessage(ChatColor.BLUE + "¸ĞĞ»ÄúÊ¹ÓÃ×¨ÓÃ¿Í»§¶ËµÇÂ½Meano·ş");
+			player.sendMessage(ChatColor.BLUE + "æ„Ÿè°¢æ‚¨ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯ç™»é™†Meanoæœ");
 			if (PlayerCombo.equals("Normal") || PlayerCombo.equals("B")) {
-				player.sendMessage(ChatColor.DARK_PURPLE + "Ã¿ÌìÊ¹ÓÃ×¨ÓÃ¿Í»§¶ËµÇÂ½£¬³¬¹ıÁ½Ğ¡Ê±£¬µ±Ìì¼ÆÈëÁ¬ĞøµÇÂ½ÌìÊı£¬µÚ¶şÌì½«»ñµÃ£¨5*Á¬ĞøÌìÊı£©½±Àø·ÖÖÓÊı");
+				player.sendMessage(ChatColor.DARK_PURPLE + "æ¯å¤©ä½¿ç”¨ä¸“ç”¨å®¢æˆ·ç«¯ç™»é™†ï¼Œè¶…è¿‡ä¸¤å°æ—¶ï¼Œå½“å¤©è®¡å…¥è¿ç»­ç™»é™†å¤©æ•°ï¼Œç¬¬äºŒå¤©å°†è·å¾—ï¼ˆ5*è¿ç»­å¤©æ•°ï¼‰å¥–åŠ±åˆ†é’Ÿæ•°");
 				if(ContinuousDays == 0){
-					player.sendMessage(ChatColor.DARK_PURPLE + "×òÌìÃ»ÓĞ³¬¹ıÁ½Ğ¡Ê±µÄ×¨ÓĞ¿Í»§¶ËµÇÂ½¼ÇÂ¼£¬½ñÌìÎ´»ñµÃÔÚÏß½±ÀøÊ±¼ä");
+					player.sendMessage(ChatColor.DARK_PURPLE + "æ˜¨å¤©æ²¡æœ‰è¶…è¿‡ä¸¤å°æ—¶çš„ä¸“æœ‰å®¢æˆ·ç«¯ç™»é™†è®°å½•ï¼Œä»Šå¤©æœªè·å¾—åœ¨çº¿å¥–åŠ±æ—¶é—´");
 				}else if (ContinuousDays > 0){
 					int Minute = (ContinuousDays>7)?30:(ContinuousDays*5);
-					player.sendMessage(ChatColor.DARK_PURPLE + "ÄúÒÑÁ¬ĞøµÇÂ½" + ContinuousDays +"Ìì£¬»ñµÃ" + Minute + "·ÖÖÓ½±ÀøÊ±¼ä£¬¾¡¿ìÊ¹ÓÃ£¬ÏÂÖÜÒ»ÔçÁùµã½«ÇåÁã¡£");
+					player.sendMessage(ChatColor.DARK_PURPLE + "æ‚¨å·²è¿ç»­ç™»é™†" + ContinuousDays +"å¤©ï¼Œè·å¾—" + Minute + "åˆ†é’Ÿå¥–åŠ±æ—¶é—´ï¼Œå°½å¿«ä½¿ç”¨ï¼Œä¸‹å‘¨ä¸€æ—©å…­ç‚¹å°†æ¸…é›¶ã€‚");
 				}
 			}
 		} else {
-			player.sendMessage(ChatColor.BLUE + "ÄúÎ´Ê¹ÓÃMeano·ş×¨ÓÃ¿Í»§¶ËµÇÂ½Meano·ş£¬ÎŞ·¨»ñµÃ·şÎñÆ÷ÔÚÏßÊ±¼ä½±ÀøµÈÈ¨Àû¡£");
+			player.sendMessage(ChatColor.BLUE + "æ‚¨æœªä½¿ç”¨Meanoæœä¸“ç”¨å®¢æˆ·ç«¯ç™»é™†Meanoæœï¼Œæ— æ³•è·å¾—æœåŠ¡å™¨åœ¨çº¿æ—¶é—´å¥–åŠ±ç­‰æƒåˆ©ã€‚");
 		}
 	}
 }
