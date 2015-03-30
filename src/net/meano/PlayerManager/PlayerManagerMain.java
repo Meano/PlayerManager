@@ -24,7 +24,7 @@ public class PlayerManagerMain extends JavaPlugin {
 	public String[] SetWhitelist = new String[3];
 	public void onEnable() {
 		PMM = this;
-		getLogger().info("PlayerManager 0.1,by Meano. 正在载入.");
+		getLogger().info("PlayerManager 0.2,by Meano. 正在载入.");
 		PluginManager PM = Bukkit.getServer().getPluginManager();
 		PM.registerEvents(new PlayerManagerListeners(this), this);
 		SQLData = new SQLite(new File(getDataFolder(), "PMData.db"), this);
@@ -181,6 +181,8 @@ public class PlayerManagerMain extends JavaPlugin {
 						String ComboType;
 						int TodayLimit;
 						int AwardMinute;
+						int ContinuousDays;
+						int OnlineMinute;
 						long ExpireTime;
 						SQLData.Close();
 						SQLData.Open();
@@ -188,14 +190,20 @@ public class PlayerManagerMain extends JavaPlugin {
 						TodayLimit = SQLData.GetTodayLimitMinute(sender.getName());
 						ExpireTime = SQLData.GetComboExpireTime(sender.getName());
 						AwardMinute = SQLData.GetAwardMinute(sender.getName());
+						ContinuousDays = SQLData.GetContinuousDays(sender.getName());
+						OnlineMinute = SQLData.GetOnlineMinutes(sender.getName());
 						sender.sendMessage(ChatColor.BLUE + "玩家" + sender.getName() + "游戏时间情况查询:");
 						sender.sendMessage(ChatColor.YELLOW + "时长套餐类型:" + ComboType + "套餐");
 						if (ComboType.equals("Normal")) {
 							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余免费时长:" + TodayLimit + "分钟");
 							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长:" + AwardMinute + "分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家连续使用专用客户端登陆天数:" + ContinuousDays + "天");
+							sender.sendMessage(ChatColor.YELLOW + "玩家今日使用专用客户端分钟数:" + OnlineMinute + "分钟,超过120分将计入连续登陆天数。");
 						} else if (ComboType.equals("B")) {
 							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余剩余时长:" + TodayLimit + "分钟");
 							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长:" + AwardMinute + "分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家连续使用专用客户端登陆天数:" + ContinuousDays + "天");
+							sender.sendMessage(ChatColor.YELLOW + "玩家今日使用专用客户端分钟数:" + OnlineMinute + "分钟,超过120分将计入连续登陆天数。");
 							sender.sendMessage(ChatColor.YELLOW + "套餐到期日: " + getDateString(ExpireTime) + " 在此之前的周五六日您的游戏时间不受不限制。");
 						} else if (ComboType.equals("C") || ComboType.equals("A")) {
 							sender.sendMessage(ChatColor.YELLOW + "套餐到期日: " + getDateString(ExpireTime) + " 在此之前您的游戏时间都不受不限制。");

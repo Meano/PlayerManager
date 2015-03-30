@@ -1,6 +1,6 @@
 name: PlayerManager
 main: net.meano.PlayerManager.PlayerManagerMain
-version: 0.1
+version: 0.2
 author: Meano
 commands:
   PlayerManager:

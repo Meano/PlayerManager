@@ -124,7 +124,7 @@ public class PlayerManagerListeners implements Listener {
 			} else if (PlayerCombo.equals("Forever")) {
 				ForeverLogin(player);
 			}
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PMM), 1*20*60);
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PlayerCombo, PMM), 1*20*60);
 		}
 	}
 
@@ -278,6 +278,7 @@ public class PlayerManagerListeners implements Listener {
 			ContinuousDays = 0;
 			PMM.SQLData.SetContinuousDays(PlayerName, 0);
 		}
+		PMM.SQLData.SetOnlineMinutes(PlayerName, 0);
 		return ContinuousDays;
 	}
 	
