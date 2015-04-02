@@ -140,37 +140,42 @@ public class PlayerManagerMain extends JavaPlugin {
 					if (!sender.isOp())
 						return true;
 					if (args.length == 2) {
-						String ComboType = null;
-						int TodayLimit = 0;
-						int AwardMinute = 0;
-						long ExpireTime = 0;
-						SQLData.Close();
-						SQLData.Open();
 						if (!SQLData.HasPlayer(args[1])) {
 							sender.sendMessage(ChatColor.BLUE + "没有这个玩家！");
 							return true;
 						}
+						String ComboType = null;
+						int TodayLimit = 0;
+						int AwardMinute = 0;
+						long ExpireTime = 0;
+						int ContinuousDays = 0;
+						int OnlineMinute = 0;
+						SQLData.Close();
+						SQLData.Open();
 						ComboType = SQLData.GetComboType(args[1]);
 						TodayLimit = SQLData.GetTodayLimitMinute(args[1]);
 						ExpireTime = SQLData.GetComboExpireTime(args[1]);
 						AwardMinute = SQLData.GetAwardMinute(args[1]);
-						//for (double Tps : MinecraftServer.getServer().recentTps) {
-						//	sender.sendMessage("TPS: " + Tps);
-						//}
+						ContinuousDays = SQLData.GetContinuousDays(args[1]);
+						OnlineMinute = SQLData.GetOnlineMinutes(args[1]);
 						sender.sendMessage(ChatColor.BLUE + "玩家" + args[1] + "游戏时间情况查询:");
 						sender.sendMessage(ChatColor.YELLOW + "时长套餐类型:" + ComboType + "套餐");
 						if (ComboType.equals("Normal")) {
-							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余时长:" + TodayLimit + "分钟");
-							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长:" + AwardMinute + "分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余时长: " + TodayLimit + " 分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长: " + AwardMinute + " 分钟");
 						} else if (ComboType.equals("Forever")) {
 							sender.sendMessage(ChatColor.YELLOW + "套餐永不过期");
 						} else if (ComboType.equals("B")) {
-							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余时长:" + TodayLimit + "分钟");
-							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长:" + AwardMinute + "分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家今日剩余时长: " + TodayLimit + " 分钟");
+							sender.sendMessage(ChatColor.YELLOW + "玩家累积任务奖励时长: " + AwardMinute + " 分钟");
 							sender.sendMessage(ChatColor.YELLOW + "套餐到期日: " + getDateString(ExpireTime));
 						} else {
 							sender.sendMessage(ChatColor.YELLOW + "套餐到期日: " + getDateString(ExpireTime));
 						}
+						if(sender.hasPermission("PlayerManager.Award"))
+							sender.sendMessage(ChatColor.YELLOW + "玩家可用奖励其他玩家分钟数: " + AwardMinute + " 分钟");
+						sender.sendMessage(ChatColor.YELLOW + "玩家今日使用转用客户端在线时长: " + OnlineMinute + " 分钟");
+						sender.sendMessage(ChatColor.YELLOW + "玩家连续使用转用客户端在线天数: " + ContinuousDays + " 天");
 						return true;
 					} else {
 						sender.sendMessage("参数不正确：/pm check 玩家");
