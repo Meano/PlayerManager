@@ -77,7 +77,7 @@ public class PlayerManagerListeners implements Listener {
 	}
 	
 	//玩家登陆游戏事件
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		String PlayerName = event.getPlayer().getName();
 		String PlayerCombo = null;
@@ -124,7 +124,7 @@ public class PlayerManagerListeners implements Listener {
 			} else if (PlayerCombo.equals("Forever")) {
 				ForeverLogin(player);
 			}
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PlayerCombo, PMM), 1*20*60);
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PlayerCombo, PMM), 1*20*30);
 		}
 	}
 

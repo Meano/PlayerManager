@@ -174,8 +174,8 @@ public class PlayerManagerMain extends JavaPlugin {
 						}
 						if(sender.hasPermission("PlayerManager.Award"))
 							sender.sendMessage(ChatColor.YELLOW + "玩家可用奖励其他玩家分钟数: " + AwardMinute + " 分钟");
-						sender.sendMessage(ChatColor.YELLOW + "玩家今日使用转用客户端在线时长: " + OnlineMinute + " 分钟");
-						sender.sendMessage(ChatColor.YELLOW + "玩家连续使用转用客户端在线天数: " + ContinuousDays + " 天");
+						sender.sendMessage(ChatColor.YELLOW + "玩家今日使用专用客户端在线时长: " + OnlineMinute + " 分钟");
+						sender.sendMessage(ChatColor.YELLOW + "玩家连续使用专用客户端在线天数: " + ContinuousDays + " 天");
 						return true;
 					} else {
 						sender.sendMessage("参数不正确：/pm check 玩家");
