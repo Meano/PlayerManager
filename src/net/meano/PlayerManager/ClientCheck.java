@@ -2,6 +2,7 @@
 
 import net.meano.DataBase.ClientStatu;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class ClientCheck implements Runnable {
@@ -35,7 +36,8 @@ public class ClientCheck implements Runnable {
 			player.sendMessage("§b§l>>您未使用Meano服专用客户端登陆Meano服.");
 			player.sendMessage("§c§l>>无法获得§b§l服务器在线时间奖励等权利");
 			player.sendMessage("§b§l>>免费用户每天使用专用客户端登陆，超过两小时，当天计入连续登陆天数");
-			player.sendMessage("§b§l>>第二天将获得§c§l<5*连续天数>§b§l分钟的奖励时间。");
+			player.sendMessage("§b§l>>第二天将获得§c§l<5*连续天数>§b§l分钟每星期最多§c§l3.5小时§b§l累计奖励时间。");
 		}
+		player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 0);
 	}
 }

@@ -1,7 +1,6 @@
 ﻿package net.meano.PlayerManager;
 
 import net.meano.DataBase.ClientStatu;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -132,7 +131,7 @@ public class PlayerManagerListeners implements Listener {
 	public void NormalLogin(Player player){
 		player.sendMessage(ChatColor.GREEN + "亲爱的免费玩家，你好！服务器的运行需要大量的时间和金钱进行维护。");
 		player.sendMessage(ChatColor.GREEN + "为了服务器长久发展，又不破坏游戏内公平，限定免费玩家每天4小时的游戏时间");
-		player.sendMessage(ChatColor.GREEN + "到下次6点或18点时长更新前还剩余" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "分钟游戏时间");
+		player.sendMessage(ChatColor.GREEN + "每日6时18时，更新2小时时长，目前你还有" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "分钟游戏时间");
 		player.sendMessage(ChatColor.GREEN + "可以通过支付宝，微信，电话卡支付不限时套餐，详询群326355263。使用/pm me查询时长。");
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
@@ -186,7 +185,7 @@ public class PlayerManagerListeners implements Listener {
 				player.sendMessage(ChatColor.YELLOW + "您的套餐到期日为:" + PMM.getDateString(ExpireTime) + "，祝玩的愉快！");
 			} else {
 				player.sendMessage(ChatColor.YELLOW + "亲爱的B套餐玩家，你好！感谢您对服务器的支持与付出！");
-				player.sendMessage(ChatColor.YELLOW + "今天是工作日，您只有免费游戏时间，剩余免费时间：" + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "分钟，祝玩的愉快！");
+				player.sendMessage(ChatColor.YELLOW + "今天是工作日，您只有免费游戏时间，剩余免费时间： " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "分钟，祝玩的愉快！");
 			}
 		}
 		// 套餐B权限处理
