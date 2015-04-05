@@ -2,5 +2,6 @@
 
 public enum ClientStatu {
 	Offline,
-	Online;
+	Online,
+	Join;
 }

@@ -50,7 +50,18 @@ public class MinuteTick implements Runnable {
 		int LimitTime = SQLData.GetTodayLimitMinute(player.getName());
 		if (LimitTime > 0) {
 			if (LimitTime == 1) {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l您的免费时长已经用完，如果您有做服务器任务获得的奖励时间，接下来将消耗奖励时间，否则，您将被踢出游戏").toString());
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l您的免费时长已经用完，如果您有做服务器任务获得的奖励时间，接下来将消耗奖励时间，否则，您将被踢出游戏").toString());
+			}else if(LimitTime < 120) {
+				if(!(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Join)||SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Online))){
+					player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&c&l抱歉，只有使用服务器专有客户端登陆才能完全享受每天免费的8小时游戏时间，否则您只有4小时限制游戏时间！\n\r&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+				}
+			}else if(LimitTime == 120){
+				if(!(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Join)||SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Online))){
+					player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&c&l抱歉，只有使用服务器专有客户端登陆才能完全享受每天免费的8小时游戏时间，否则您只有4小时限制游戏时间！\n\r&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+				}else{
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l感谢你使用专有客户端登陆服务器进行游戏，你可以享受完整的每天8小时游戏免费游戏在线时间。"));
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+				}
 			}
 			SQLData.SetTodayLimitMinute(player.getName(), LimitTime - 1);
 		} else {
@@ -78,6 +89,17 @@ public class MinuteTick implements Runnable {
 			if (LimitTime > 0) {
 				if (LimitTime == 1) {
 					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l您的免费时长已经用完，如果您有做服务器任务获得的奖励时间，接下来将消耗奖励时间，否则，您将被踢出游戏").toString());
+				}else if(LimitTime < 120) {
+					if(!(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Join)||SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Online))){
+						player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&c&l抱歉，只有使用服务器专有客户端登陆才能完全享受每天免费的8小时游戏时间，否则您只有4小时限制游戏时间！\n\r&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+					}
+				}else if(LimitTime == 120){
+					if(!(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Join)||SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Online))){
+						player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&c&l抱歉，只有使用服务器专有客户端登陆才能完全享受每天免费的8小时游戏时间，否则您只有4小时限制游戏时间！\n\r&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+					}else{
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l感谢你使用专有客户端登陆服务器进行游戏，你可以享受完整的每天8小时游戏免费游戏在线时间。"));
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l有条件的话也希望您能通过购买服务器套餐支持我们，享受自由选择皮肤，头戴各种方块，自定称号，不限时等权利。"));
+					}
 				}
 				SQLData.SetTodayLimitMinute(player.getName(), LimitTime - 1);
 			} else {

@@ -51,6 +51,9 @@ public class Server extends Thread {
 					if(ReceiveClientInfo[3].equals("Connect")){
 						PMM.SQLData.SetClientStatu(ReceiveClientInfo[1], ClientStatu.Online);
 						PMM.getLogger().info("玩家: " + ReceiveClientInfo[1] + " 使用专有客户端登陆游戏！");
+					}else if(ReceiveClientInfo[3].equals("Join")){
+						PMM.SQLData.SetClientStatu(ReceiveClientInfo[1], ClientStatu.Join);
+						PMM.getLogger().info("玩家: " + ReceiveClientInfo[1] + " 使用专有客户端打开游戏！");
 					}
 				}
 				ReceiveString = null;
