@@ -34,8 +34,8 @@ public class MinuteTick implements Runnable {
 		long LongTime = System.currentTimeMillis();
 		if ((PMM.getTimeHours(LongTime) == 6) || (PMM.getTimeHours(LongTime) == 18)) {
 			if (PMM.getTimeMinutes(LongTime) < 3 && (!PMM.isUpdate)) {
-				SQLData.UpdateLimitTime(120);
-				SQLData.UpdateAwardTime(120);
+				SQLData.UpdateLimitTime(240);
+				SQLData.UpdateAwardTime(240);
 				Bukkit.broadcastMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "各位免费玩家，服务器已经更新了大家的免费在线时长，每天6点和18点更新，在线时长使用/pm me 查看。");
 				PMM.isUpdate = true;
 			} else if (PMM.getTimeMinutes(LongTime) > 3) {

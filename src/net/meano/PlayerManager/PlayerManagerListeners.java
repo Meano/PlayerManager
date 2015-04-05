@@ -130,8 +130,8 @@ public class PlayerManagerListeners implements Listener {
 	//Normal套餐登陆处理
 	public void NormalLogin(Player player){
 		player.sendMessage(ChatColor.GREEN + "亲爱的免费玩家，你好！服务器的运行需要大量的时间和金钱进行维护。");
-		player.sendMessage(ChatColor.GREEN + "为了服务器长久发展，又不破坏游戏内公平，限定免费玩家每天4小时的游戏时间");
-		player.sendMessage(ChatColor.GREEN + "每日6时18时，更新2小时时长，目前你还有" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "分钟游戏时间");
+		player.sendMessage(ChatColor.GREEN + "为了服务器长久发展，又不破坏游戏内公平，限定免费玩家每天8小时的游戏时间");
+		player.sendMessage(ChatColor.GREEN + "每日6时18时更新时长，目前你还有" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "分钟游戏时间");
 		player.sendMessage(ChatColor.GREEN + "可以通过支付宝，微信，电话卡支付不限时套餐，详询群326355263。使用/pm me查询时长。");
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
@@ -149,7 +149,7 @@ public class PlayerManagerListeners implements Listener {
 			PMM.SQLData.SetComboType(PlayerName, "Normal");
 			PMM.SQLData.SetTodayLimitMinute(PlayerName, 120);
 			player.sendMessage(ChatColor.YELLOW + "亲爱的A套餐玩家，你好！感谢您对服务器的支持与付出！");
-			player.sendMessage(ChatColor.YELLOW + "您的套餐已经到期，已为您转换为普通免费玩家，每日依旧有4小时免费游戏时间，祝玩的愉快！");
+			player.sendMessage(ChatColor.YELLOW + "您的套餐已经到期，已为您转换为普通免费玩家，每日依旧有8小时免费游戏时间，祝玩的愉快！");
 		} else {
 			player.sendMessage(ChatColor.YELLOW + "亲爱的A套餐玩家，你好！感谢您对服务器的支持与付出！");
 			player.sendMessage(ChatColor.YELLOW + "您的套餐到期日为:" + PMM.getDateString(ExpireTime) + "，祝玩的愉快！");
