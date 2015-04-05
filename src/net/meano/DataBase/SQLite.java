@@ -134,7 +134,7 @@ public class SQLite{
 			ps.setInt(3, 0);
 			ps.setLong(4, System.currentTimeMillis());
 			ps.setString(5, "Normal");
-			ps.setInt(6, 120);
+			ps.setInt(6, 240);
 			ps.setLong(7, 0);
 			ps.setString(8, "Offline");
 			ps.setString(9, "false");
