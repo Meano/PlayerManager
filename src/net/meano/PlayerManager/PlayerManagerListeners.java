@@ -107,9 +107,10 @@ public class PlayerManagerListeners implements Listener {
 			if (FirstPlay) {
 				PMM.getLogger().info(PlayerName + " 今天第一次登陆，距上一次登陆已有 " + PMM.SQLData.CalculateDaysLast(PlayerName) + " 天。");
 				PMM.SQLData.UpdateTodayFirstLogin(PlayerName);
-				ContinuousDays = CalculateContinuousDays(player);
+				ContinuousDays = 0;//
+				CalculateContinuousDays(player);
 			} else {
-				PMM.getLogger().info(PlayerName + "今日多次登陆，剩余可用在线时间 " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "分。");
+				PMM.getLogger().info(PlayerName + "今天多次登陆，剩余可用在线时间 " + PMM.SQLData.GetTodayLimitMinute(PlayerName) + "分。");
 			}
 			PlayerCombo = PMM.SQLData.GetComboType(PlayerName);
 			if (PlayerCombo.equals("Normal")) {

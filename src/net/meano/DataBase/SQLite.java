@@ -281,7 +281,7 @@ public class SQLite{
 		}
 	}
 
-	// 获得套餐天数
+	// 获得奖励时间
 	public int GetAwardMinute(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -296,7 +296,7 @@ public class SQLite{
 		}
 	}
 
-	// 设定套餐天数
+	// 设定奖励时间
 	public void SetAwardMinute(String PlayerName, long MinuteTime) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET AwardMinute=? WHERE PlayerName=?;");
@@ -329,6 +329,17 @@ public class SQLite{
 			ps.setString(2, "A");
 			ps.setString(3, "C");
 			ps.setString(4, "Forever");
+			ps.executeUpdate();
+		} catch (SQLException e) {
+
+		}
+	}
+	// 刷新Normal玩家奖励时间
+	public void UpdateNormalAwardTime(int min) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET AwardMinute=? WHERE ComboType=?;");
+			ps.setInt(1, min);
+			ps.setString(2, "Normal");
 			ps.executeUpdate();
 		} catch (SQLException e) {
 

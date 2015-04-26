@@ -288,6 +288,17 @@ public class PlayerManagerMain extends JavaPlugin {
 						sender.sendMessage("参数不正确：/pm reaward 分钟数");
 						return true;
 					}
+				} else if (args[0].equalsIgnoreCase("reawardn")) {
+					if (!sender.isOp())
+						return true;
+					if (args.length == 2) {
+						SQLData.UpdateNormalAwardTime(Integer.parseInt(args[1]));
+						sender.sendMessage(ChatColor.BLUE + "成功刷新所有普通玩家的奖励分钟数");
+						return true;
+					} else {
+						sender.sendMessage("参数不正确：/pm reawardn 分钟数");
+						return true;
+					}
 				} else if (args[0].equalsIgnoreCase("whitelist")) {
 					if (!sender.hasPermission("PlayerManager.Whitelist")) {
 						sender.sendMessage(ChatColor.RED + "你没有权限添加！");
