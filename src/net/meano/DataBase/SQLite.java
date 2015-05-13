@@ -115,20 +115,21 @@ public class SQLite{
 	// 添加玩家
 	public void AddNewPlayer(String PlayerName, String UUID) {
 		try {
-			PreparedStatement ps = DataBaseConnection.prepareStatement("INSERT INTO PMPlayers"
-													+ "(PlayerName, " 
-													+ "UUID, " 
-													+ "PlayerLevel, " 
-													+ "TodayFirstLogin, " 
-													+ "ComboType," 
-													+ "TodayLimitMinute, " 
-													+ "ComboExpireTime, " 
-													+ "ClientStatu, " 
-													+ "ClientNoCheck, " 
-													+ "AwardMinute,"
-													+ "ContinuousDays," 
-													+ "OnlineMinutes)" 
-													+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
+			PreparedStatement ps = DataBaseConnection.prepareStatement(
+					"INSERT INTO PMPlayers"
+					+ "(PlayerName, " 
+					+ "UUID, " 
+					+ "PlayerLevel, " 
+					+ "TodayFirstLogin, " 
+					+ "ComboType," 
+					+ "TodayLimitMinute, " 
+					+ "ComboExpireTime, " 
+					+ "ClientStatu, " 
+					+ "ClientNoCheck, " 
+					+ "AwardMinute,"
+					+ "ContinuousDays," 
+					+ "OnlineMinutes)" 
+					+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
 			ps.setString(1, PlayerName.toLowerCase());
 			ps.setString(2, UUID);
 			ps.setInt(3, 0);
@@ -143,7 +144,6 @@ public class SQLite{
 			ps.setInt(12, 0);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-
 		}
 	}
 
@@ -424,6 +424,33 @@ public class SQLite{
 			ps.executeUpdate();
 		} catch (SQLException e) {
 
+		}
+	}
+	
+	//更改是否强制使用专用客户端
+	public void SetClientCheck(String PlayerName,Boolean isCheck) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ClientCheck=? WHERE PlayerName=?;");
+			ps.setString(1, isCheck.toString());
+			ps.setString(2, PlayerName.toLowerCase());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+
+		}
+	}
+	
+	//获取是否强制使用专用客户端
+	public Boolean GetClientCheck(String PlayerName) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
+			ps.setString(1, PlayerName.toLowerCase());
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				return Boolean.valueOf(result.getString("ClientCheck"));
+			} else
+				return null;
+		} catch (SQLException e) {
+			return null;
 		}
 	}
 	
