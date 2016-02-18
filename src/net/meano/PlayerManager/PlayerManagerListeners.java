@@ -60,8 +60,8 @@ public class PlayerManagerListeners implements Listener {
 		// 存在此玩家
 		if (PMM.SQLData.HasPlayer(PlayerName)) {
 			if (PMM.SQLData.GetComboType(PlayerName).equals("Normal")) {
-				if ((PMM.SQLData.GetTodayLimitMinute(PlayerName) <= 0) && (PMM.SQLData.GetAwardMinute(PlayerName) <= 0)) {
-					event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "亲爱的免费玩家，您的免费时长和为服务器做任务获得的时长已经用完，您可选择购买服务器无限时套餐，或等待6点或18点的时长更新重新登陆游戏。");
+				if ((PMM.SQLData.GetTodayLimitMinute(PlayerName) <= 0)&&(PMM.SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Offline))) {
+					event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "亲爱的玩家，因为您未使用官方客户端，限定1小时在线时长已经用完，请使用官方客户端登陆服务器以进行不限时游戏。Q群：326355263");
 				}
 			} else if (PMM.SQLData.GetComboType(PlayerName).equals("B")) {
 				String Week = PMM.getWeekString(System.currentTimeMillis());
@@ -95,11 +95,9 @@ public class PlayerManagerListeners implements Listener {
 		PMM.SQLData.Open();
 		if (!PMM.SQLData.HasPlayer(player.getName())) {
 			PMM.SQLData.AddNewPlayer(player.getName(), player.getUniqueId().toString());
-			player.sendMessage(ChatColor.AQUA + "亲爱的玩家，你好！因服务器的运行需要大量的时间和金钱进行维护，现改变制度。");
-			player.sendMessage(ChatColor.AQUA + "为服务器长久发展，又不破坏游戏内公平，限定免费玩家每天有4小时游戏时间。");
-			player.sendMessage(ChatColor.AQUA + "之前捐助过服务器的将获得专享套餐，长期在服务器游戏的玩家可以选择以下两种套餐：");
-			player.sendMessage(ChatColor.GREEN + "套餐A：25元/月，一个月内游戏不限时，并给予当月" + ChatColor.YELLOW + "10次称号更改和2次皮肤修改。");
-			player.sendMessage(ChatColor.GREEN + "套餐B：12元/月，一个月内周五六日不限时，并给予当月" + ChatColor.YELLOW + "3次称号更改。");
+			player.sendMessage(ChatColor.YELLOW + "使用官方客户端登陆服服务器可享受不限时游戏时间。");
+			player.sendMessage(ChatColor.BLUE + "非官方客户端限定每天游戏1小时，加Q群326355263下载官方客户端。");
+			player.sendMessage(ChatColor.GREEN + "服务器所有游戏内容都是免费的，捐助玩家可获得皮肤、称号、方块帽子。");
 			PMM.getLogger().info(PlayerName + " 新添加入数据库");
 		} else {
 			//判断是否是今天第一次登陆
@@ -130,10 +128,9 @@ public class PlayerManagerListeners implements Listener {
 
 	//Normal套餐登陆处理
 	public void NormalLogin(Player player){
-		player.sendMessage(ChatColor.GREEN + "亲爱的免费玩家，你好！服务器的运行需要大量的时间和金钱进行维护。");
-		player.sendMessage(ChatColor.GREEN + "为了服务器长久发展，又不破坏游戏内公平，限定免费玩家每天8小时的游戏时间");
-		player.sendMessage(ChatColor.GREEN + "每日6时18时更新时长，目前你还有" + PMM.SQLData.GetTodayLimitMinute(player.getName()) + "分钟游戏时间");
-		player.sendMessage(ChatColor.GREEN + "可以通过支付宝，微信，电话卡支付不限时套餐，详询群326355263。使用/pm me查询时长。");
+		player.sendMessage(ChatColor.YELLOW + "使用官方客户端登陆服服务器可享受不限时游戏时间。");
+		player.sendMessage(ChatColor.BLUE + "非官方客户端限定每天游戏1小时，加Q群326355263下载官方客户端。");
+		player.sendMessage(ChatColor.GREEN + "服务器所有游戏内容都是免费的，捐助玩家可获得皮肤、称号、方块帽子。");
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {
 				Perm.RemoveGroup(player, GroupofPlayer.getName());
