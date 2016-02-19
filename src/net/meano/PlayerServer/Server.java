@@ -63,7 +63,7 @@ public class Server extends Thread {
 					SocketReader.close();
 				} catch (IOException ex) {
 				}
-				PMM.getLogger().info(e.getLocalizedMessage());
+				//PMM.getLogger().info(e.getLocalizedMessage());
 			}
 		}
 	}

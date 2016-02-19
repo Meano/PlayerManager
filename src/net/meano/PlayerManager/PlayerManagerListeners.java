@@ -1,8 +1,13 @@
 ﻿package net.meano.PlayerManager;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.meano.DataBase.ClientStatu;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -128,8 +133,20 @@ public class PlayerManagerListeners implements Listener {
 
 	//Normal套餐登陆处理
 	public void NormalLogin(Player player){
+		TextComponent DownloadClient = new TextComponent("单击此处下载官方客户端,");
+		DownloadClient.setClickEvent(new ClickEvent(Action.OPEN_URL,"http://shang.qq.com/wpa/qunwpa?idkey=1ee02d962c1e049aad634dd2c65c3d65d0005ccd3bfec21a833aa4191495bd1e"));
+		DownloadClient.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").color(ChatColor.AQUA).append("单击此链接，下载官方客户端，官方客户端不限在线时间。").create()));
+		DownloadClient.setBold(true);
+		DownloadClient.setColor(ChatColor.GREEN);
+		TextComponent AddGroup = new TextComponent("单击此处加入官方Q群。");
+		AddGroup.setClickEvent(new ClickEvent(Action.OPEN_URL,"http://shang.qq.com/wpa/qunwpa?idkey=1ee02d962c1e049aad634dd2c65c3d65d0005ccd3bfec21a833aa4191495bd1e"));
+		AddGroup.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").color(ChatColor.AQUA).append("单击此链接，加入Meano服官方Q群，QQ群号326355263。").create()));
+		AddGroup.setBold(true);
+		AddGroup.setColor(ChatColor.GREEN);
+		DownloadClient.addExtra(AddGroup);
 		player.sendMessage(ChatColor.YELLOW + "使用官方客户端登陆服服务器可享受不限时游戏时间。");
-		player.sendMessage(ChatColor.BLUE + "非官方客户端限定每天游戏1小时，加Q群326355263下载官方客户端。");
+		player.sendMessage(ChatColor.BLUE + "非官方客户端限定时间1小时,");
+		player.spigot().sendMessage(DownloadClient);
 		player.sendMessage(ChatColor.GREEN + "服务器所有游戏内容都是免费的，捐助玩家可获得皮肤、称号、方块帽子。");
 		for (Group GroupofPlayer : Perm.getGroups(player.getUniqueId())) {
 			if (GroupofPlayer.getName().contains("Combo")) {

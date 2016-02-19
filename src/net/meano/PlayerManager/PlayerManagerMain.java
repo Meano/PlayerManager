@@ -10,6 +10,7 @@ import net.meano.PlayerServer.Server;
 import net.meano.PlayerManager.MinuteTick;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -332,6 +333,20 @@ public class PlayerManagerMain extends JavaPlugin {
 						sender.sendMessage("只能由玩家使用这条指令！");
 					}
 					
+				}else if(args[0].equalsIgnoreCase("spawn")){
+					if(sender instanceof CommandSender){
+						if(args.length == 5){
+							//判断是否有这个玩家
+							if(SQLData.HasPlayer(args[1])){
+								Location SpawnLocation = new Location(Bukkit.getWorld("world"), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+								Player player = Bukkit.getServer().getPlayer(args[1]);
+								player.setBedSpawnLocation(SpawnLocation);
+								player.teleport(SpawnLocation);
+							}
+						}else{
+							sender.sendMessage("参数不正确：/pm spawn 玩家ID x y z");
+						}
+					}
 				}else {
 					sender.sendMessage("/pm me 查询自己的时长或套餐剩余情况");
 					return true;
