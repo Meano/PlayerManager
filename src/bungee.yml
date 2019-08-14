@@ -1,0 +1,4 @@
+name: PlayerManager
+main: net.meano.PlayerManager.BungeeMain
+version: 2.0
+author: Meano

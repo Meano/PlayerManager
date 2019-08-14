@@ -4,23 +4,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import net.meano.DataBase.ClientStatu;
-import net.meano.PlayerManager.PlayerManagerMain;
+import net.meano.PlayerManager.BukkitMain;
 
 public class Server extends Thread {
 	ServerSocket PMServer = null;
 	Socket SocketAccept = null;
 	InputStreamReader SocketReader = null;
-	PlayerManagerMain PMM;
+	BukkitMain PMM;
 	String ReceiveString;
 	String[] ReceiveClientInfo;
 	int ReceiveLength = 0;
 	char ReceiveChars[] = new char[30];
 
-	public Server(PlayerManagerMain GetPlugin) {
+	public Server(BukkitMain GetPlugin) {
 		PMM = GetPlugin;
 		try {
-			PMServer = new ServerSocket(25566);
+			PMServer = new ServerSocket(PMM.getConfig().getInt("Server.Port"));
 		} catch (IOException e) {
 			PMM.getLogger().info(e.getCause().getMessage());
 		}
@@ -35,10 +34,10 @@ public class Server extends Thread {
 	}
 
 	public void run() {
-		PMM.getLogger().info("开始监听25566端口");
+		PMM.getLogger().info("开始监听" + PMServer.getLocalPort() + "端口");
 		while (!PMServer.isClosed()) {
 			try {
-				SocketAccept = PMServer.accept();
+				/*SocketAccept = PMServer.accept();
 				SocketAccept.setSoTimeout(2000);
 				SocketReader = new InputStreamReader(SocketAccept.getInputStream(),"UTF8");
 				ReceiveLength = SocketReader.read(ReceiveChars);
@@ -56,7 +55,7 @@ public class Server extends Thread {
 						PMM.getLogger().info("玩家: " + ReceiveClientInfo[1] + " 使用专有客户端打开游戏！");
 					}
 				}
-				ReceiveString = null;
+				ReceiveString = null;*/
 			} catch (Exception e) {
 				try {
 					SocketAccept.close();

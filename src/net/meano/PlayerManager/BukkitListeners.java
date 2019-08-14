@@ -1,14 +1,10 @@
 ﻿package net.meano.PlayerManager;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.meano.DataBase.ClientStatu;
+import net.meano.PermissionsBukkit.PermissionsPlugin;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,24 +13,60 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.platymuus.bukkit.permissions.Group;
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
-public class PlayerManagerListeners implements Listener {
-	PlayerManagerMain PMM;
+public class BukkitListeners implements Listener {
+	BukkitMain PM;
 	PermissionsPlugin Perm;
-	
+
 	//初始化
-	public PlayerManagerListeners(PlayerManagerMain GetPlugin) {
-		PMM = GetPlugin;
+	public BukkitListeners(BukkitMain GetPlugin) {
+		PM = GetPlugin;
 		Perm = (PermissionsPlugin) Bukkit.getPluginManager().getPlugin("PermissionsBukkit");
 	}
 	
 	//玩家预登陆事件
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
-		String PreLoginIP = event.getAddress().getHostName();
+	public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) throws SQLException, InterruptedException {
 		String PlayerName = event.getName();
+		String PlayerUUID = event.getUniqueId().toString();
+
+		PM.SQLData.Open();
+		ResultSet PlayerData = PM.SQLData.GetPlayerInfo(PlayerName);
+		if(PlayerData == null) {
+			event.disallow(Result.KICK_OTHER, "未注册玩家，请使用服务器专用客户端注册！");
+			return;
+		}
+		
+		if(PlayerData.getString("PlayerUUID") == null) {
+			PM.SQLData.UpdatePlayerUUID(PlayerName, PlayerUUID);
+		}
+
+		if(PM.PlayerMap.containsKey(PlayerUUID)) {
+			PM.PlayerMap.remove(PlayerUUID);
+		}
+		
+		PM.PlayerMap.put(PlayerUUID, new PlayerInfo(PlayerData, PM.Redis, PM.PlayerDataMap));
+
+		PlayerInfo playerInfo = PM.PlayerMap.get(PlayerUUID);
+		String Session = playerInfo.GetRedisKey("player.session");
+		if(Session == null) {
+			event.disallow(Result.KICK_OTHER, "请使用服务器专用客户端登录！");
+			return;
+		}
+		for(int i = 0; i < 10; i++) {
+			String Status = playerInfo.GetRedisKey("player.status");
+			if(Status != null && Status.equals("join")) {
+				Bukkit.getLogger().info("登录耗时:" + (1 + i) * i * 50 + "ms.");
+				return;
+			}
+			Thread.sleep(100 + i * 100);
+		}
+
+		event.disallow(Result.KICK_OTHER, "登录超时，请稍后或重启客户端后重试。");
+		PM.SQLData.Close();
+		/*
+		String PreLoginIP = event.getAddress().getHostName();
+
 		OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
 		// 白名单
 		if (!player.isWhitelisted()) {
@@ -78,32 +110,58 @@ public class PlayerManagerListeners implements Listener {
 				}
 			}
 		}
+		 */
 	}
 	
-	//玩家登陆游戏事件
+	//玩家退出游戏事件
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
+		String PlayerUUID = event.getPlayer().getUniqueId().toString();
+		PM.PlayerMap.remove(PlayerUUID);
+	}
+	
+	// 玩家加入游戏事件
+	public int Distance = 5;
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		String PlayerName = event.getPlayer().getName();
-		String PlayerCombo = null;
-		Player player = event.getPlayer();
-		boolean FirstPlay = false;
-		int ContinuousDays = -1;
+	public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
+		String PlayerUUID = event.getPlayer().getUniqueId().toString();
+		PlayerInfo playerInfo = PM.PlayerMap.get(PlayerUUID);
+		if(playerInfo == null) {
+			return;
+		}
+		//int Merit = playerInfo.GetInt("Merit");
+		int Gem = playerInfo.GetInteger("Gem");
+		event.getPlayer().sendMessage(ChatColor.GOLD + "[积分] 当前可用积分" + Gem + "点。");
+		playerInfo.SetRedisKey("player.status", "joined");
+		event.getPlayer().setViewDistance(Distance);
+		PM.getLogger().info("Player Distance:" + event.getPlayer().getViewDistance() + "ClientDis:" + event.getPlayer().getClientViewDistance());
+		Distance = (Distance + 1) % 32;
+//		String PlayerName = event.getPlayer().getName();
+//		String PlayerCombo = null;
+//		Player player = event.getPlayer();
+//		boolean FirstPlay = false;
+//		int ContinuousDays = -1;
 		// 白名单
-		for (int i = 0; i < 3; i++) {
+		/*for (int i = 0; i < 3; i++) {
 			if (PMM.SetWhitelist[i].equalsIgnoreCase(PlayerName)) {
 				PMM.SetWhitelist[i] = "Meano";
 				player.setWhitelisted(true);
 				PMM.getLogger().info("白名单验证开始处理： " + PlayerName + " 加入白名单！");
 			}
-		}
-		PMM.SQLData.Close();
-		PMM.SQLData.Open();
+		}*/
+//		PMM.SQLData.Close();
+//		PMM.SQLData.Open();
+//		ResultSet PlayerInfo = PMM.SQLData.GetPlayer(player.getName());
+		/*if(PlayerInfo.getString("PlayerUUID"))
 		if (!PMM.SQLData.HasPlayer(player.getName())) {
 			PMM.SQLData.AddNewPlayer(player.getName(), player.getUniqueId().toString());
 			player.sendMessage(ChatColor.YELLOW + "使用官方客户端登陆服服务器可享受不限时游戏时间。");
 			player.sendMessage(ChatColor.BLUE + "非官方客户端限定每天游戏1小时，加Q群326355263下载官方客户端。");
 			player.sendMessage(ChatColor.GREEN + "服务器所有游戏内容都是免费的，捐助玩家可获得皮肤、称号、方块帽子。");
 			PMM.getLogger().info(PlayerName + " 新添加入数据库");
+			Location SpawnLocation = PMM.SQLData.GetSpawnPoint(event.getPlayer().getName());
+			player.setBedSpawnLocation(SpawnLocation, true);
+			player.teleport(SpawnLocation, TeleportCause.PLUGIN);
 		} else {
 			//判断是否是今天第一次登陆
 			FirstPlay = PMM.SQLData.isTodayFirstPlay(PlayerName);
@@ -128,22 +186,11 @@ public class PlayerManagerListeners implements Listener {
 				ForeverLogin(player);
 			}
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PMM, new ClientCheck(ContinuousDays, player, PlayerCombo, PMM), 1*20*30);
-		}
+		}*/
 	}
 
 	//Normal套餐登陆处理
-	public void NormalLogin(Player player){
-		TextComponent DownloadClient = new TextComponent("单击此处下载官方客户端,");
-		DownloadClient.setClickEvent(new ClickEvent(Action.OPEN_URL,"http://shang.qq.com/wpa/qunwpa?idkey=1ee02d962c1e049aad634dd2c65c3d65d0005ccd3bfec21a833aa4191495bd1e"));
-		DownloadClient.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").color(ChatColor.AQUA).append("单击此链接，下载官方客户端，官方客户端不限在线时间。").create()));
-		DownloadClient.setBold(true);
-		DownloadClient.setColor(ChatColor.GREEN);
-		TextComponent AddGroup = new TextComponent("单击此处加入官方Q群。");
-		AddGroup.setClickEvent(new ClickEvent(Action.OPEN_URL,"http://shang.qq.com/wpa/qunwpa?idkey=1ee02d962c1e049aad634dd2c65c3d65d0005ccd3bfec21a833aa4191495bd1e"));
-		AddGroup.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").color(ChatColor.AQUA).append("单击此链接，加入Meano服官方Q群，QQ群号326355263。").create()));
-		AddGroup.setBold(true);
-		AddGroup.setColor(ChatColor.GREEN);
-		DownloadClient.addExtra(AddGroup);
+	/*	public void NormalLogin(Player player){
 		player.sendMessage(ChatColor.YELLOW + "使用官方客户端登陆服服务器可享受不限时游戏时间。");
 		player.sendMessage(ChatColor.BLUE + "非官方客户端限定时间1小时,");
 		player.spigot().sendMessage(DownloadClient);
@@ -154,7 +201,7 @@ public class PlayerManagerListeners implements Listener {
 			}
 		}
 	}
-	
+
 	//A套餐登陆处理
 	public void ALogin(Player player){
 		boolean ComboSuit = false;
@@ -234,7 +281,7 @@ public class PlayerManagerListeners implements Listener {
 			PMM.SQLData.SetComboType(PlayerName, "Normal");
 			PMM.SQLData.SetTodayLimitMinute(PlayerName, 120);
 			player.sendMessage(ChatColor.YELLOW + "亲爱的C套餐玩家，你好！感谢您对服务器的支持与付出！");
-			player.sendMessage(ChatColor.YELLOW + "您的套餐已经到期，已为您转换为普通免费玩家，每日依旧有4小时免费游戏时间");
+			player.sendMessage(ChatColor.YELLOW + "您的套餐已经到期，已为您转换为普通免费玩家");
 		} else {
 			player.sendMessage(ChatColor.YELLOW + "亲爱的C套餐玩家，你好！感谢您对服务器的支持与付出！");
 			player.sendMessage(ChatColor.YELLOW + "您的套餐到期日为:" + PMM.getDateString(ExpireTime) + "，祝玩的愉快。");
@@ -305,4 +352,13 @@ public class PlayerManagerListeners implements Listener {
 			PMM.getLogger().info("使用专用客户端的玩家: " + PlayerName + "已经离线。");
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerRespawnEvent(PlayerRespawnEvent event) {
+		if(!event.isBedSpawn()){
+			Location SpawnLocation = PMM.SQLData.GetSpawnPoint(event.getPlayer().getName());
+			event.setRespawnLocation(SpawnLocation);
+			event.getPlayer().setBedSpawnLocation(SpawnLocation, true);
+		}
+	}*/
 }

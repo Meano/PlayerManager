@@ -3,23 +3,26 @@
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
-import java.util.TimeZone;
-import net.meano.PlayerManager.PlayerManagerMain;
+import java.util.List;
+import java.util.Map;
+import net.meano.PlayerManager.BukkitMain;
+import net.meano.PlayerManager.BungeeMain;
 
-public class SQLite{
+public class SQLite implements DBManager{
 	private File DataBaseFile;
 	private Connection DataBaseConnection;
-	public PlayerManagerMain PMM;
+	public BukkitMain PMM = BukkitMain.Instance;
 
-	public SQLite(File dbFile, PlayerManagerMain plugin) {
-		PMM = plugin;
+	public BukkitMain PMBukkit = BukkitMain.Instance;
+	public BungeeMain PMBungee = BungeeMain.Instance;
+	
+	public SQLite(File dbFile) {
+		//PMM = plugin;
 		DataBaseFile = dbFile; // 数据库文件
 		File dbDir = dbFile.getParentFile(); // 获取文件路径
 		dbDir.mkdir(); // 创建文件夹
@@ -41,19 +44,26 @@ public class SQLite{
 			// 超时设置30s
 			DataBaseStatement.setQueryTimeout(30);
 			// 运行命令 如果表不存在则建立表PMPlayers，存储玩家列表
-			DataBaseStatement.executeUpdate(	"CREATE TABLE IF NOT EXISTS PMPlayers "
+			/*DataBaseStatement.executeUpdate(	"CREATE TABLE IF NOT EXISTS PMPlayers "
 										+ "(PlayerName VARCHAR(30) NOT NULL UNIQUE, "
 										+ "UUID VARCHAR(130) NOT NULL UNIQUE, "
 										+ "PlayerLevel INT NOT NULL, "
-										+ "TodayFirstLogin INTEGER NOT NULL, "
+										+ "TodayFirstLogin LONG NOT NULL, "
 										+ "ComboType VARCHAR(10) NOT NULL, "
 										+ "TodayLimitMinute INT NOT NULL, "
-										+ "ComboExpireTime INTEGER NOT NULL, "
+										+ "ComboExpireTime LONG NOT NULL, "
 										+ "ClientStatu VARCHAR(10) NOT NULL, "
 										+ "ClientNoCheck VARCHAR(10) NOT NULL, "
 										+ "AwardMinute INT NOT NULL," 
 										+ "ContinuousDays INT NOT NULL,"
-										+ "OnlineMinutes INT NOT NULL);");
+										+ "OnlineMinutes INT NOT NULL,"
+										+ "SpawnPoint VARCHAR(50) NOT NULL);");
+			PreparedStatement ps2 = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers MODIFY COLUMN TodayFirstLogin LONG;");
+			ps2.executeUpdate();
+			ps2 = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers MODIFY COLUMN ComboExpireTime LONG;");
+			ps2.executeUpdate();
+			ps2 = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers MODIFY COLUMN SpawnPoint VARCHAR(50);");
+			ps2.executeUpdate();
 			DatabaseMetaData md = DataBaseConnection.getMetaData();
 			ResultSet rs = md.getColumns(null, null, "PMPlayers", "ContinuousDays");
 			if (!rs.next()) {
@@ -76,16 +86,32 @@ public class SQLite{
 				ps.executeUpdate();
 				PMM.getLogger().info("新列AwardMinute插入完成。");
 			}
+			rs = md.getColumns(null, null, "PMPlayers", "SpawnPoint");				//存储玩家的出生点
+			if (!rs.next()) {
+				PMM.getLogger().info("正在插入新列SpawnPoint。");
+				PreparedStatement ps = DataBaseConnection.prepareStatement("ALTER TABLE PMPlayers ADD SpawnPoint VARCHAR(30) NOT NULL DEFAULT 'world,-933,57,822';");
+				ps.executeUpdate();
+				PMM.getLogger().info("新列SpawnPoint插入完成。");
+			}*/
 		} catch (SQLException e) {
 			PMM.getLogger().info(e.getLocalizedMessage());
 		}
+	}
+
+	@Override
+	public void LogInfo(String msg) {
+		if(PMBukkit != null)
+			LogInfo(msg);
+
+		if(PMBungee != null) 
+			PMBungee.getLogger().info(msg);
 	}
 
 	public void Open() {
 		try {
 			this.DataBaseConnection = DriverManager.getConnection("jdbc:sqlite:" + DataBaseFile.getPath());
 		} catch (SQLException e) {
-
+			PMM.getLogger().info("连接SQLlite数据库失败！" + e.getMessage());
 		}
 	}
 
@@ -111,7 +137,33 @@ public class SQLite{
 			return false;
 		}
 	}
+	
+	public ResultSet GetPlayerInfo(String PlayerName) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
+			ps.setString(1, PlayerName.toLowerCase());
+			ResultSet result = ps.executeQuery();
+			if (result.next())
+				return result;
+			else
+				return null;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
+	public void UpdatePlayerUUID(String PlayerName, String PlayerUUID) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET PlayerUUID=? WHERE PlayerName=?;");
+			ps.setString(1, PlayerUUID);
+			ps.setString(2, PlayerName.toLowerCase());
+			ps.executeUpdate();
+		} catch (SQLException e) {
 
+		}
+	}
+
+/*
 	// 添加玩家
 	public void AddNewPlayer(String PlayerName, String UUID) {
 		try {
@@ -128,8 +180,9 @@ public class SQLite{
 					+ "ClientNoCheck, " 
 					+ "AwardMinute,"
 					+ "ContinuousDays," 
-					+ "OnlineMinutes)" 
-					+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
+					+ "OnlineMinutes,"
+					+ "SpawnPoint)" 
+					+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);");
 			ps.setString(1, PlayerName.toLowerCase());
 			ps.setString(2, UUID);
 			ps.setInt(3, 0);
@@ -142,6 +195,7 @@ public class SQLite{
 			ps.setInt(10, 0);
 			ps.setInt(11, 0);
 			ps.setInt(12, 0);
+			ps.setString(13, "world,146,67,68");
 			ps.executeUpdate();
 		} catch (SQLException e) {
 		}
@@ -427,7 +481,7 @@ public class SQLite{
 		}
 	}
 	
-	//更改是否强制使用专用客户端
+	// 更改是否强制使用专用客户端
 	public void SetClientCheck(String PlayerName,Boolean isCheck) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET ClientCheck=? WHERE PlayerName=?;");
@@ -439,7 +493,7 @@ public class SQLite{
 		}
 	}
 	
-	//获取是否强制使用专用客户端
+	// 获取是否强制使用专用客户端
 	public Boolean GetClientCheck(String PlayerName) {
 		try {
 			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
@@ -454,7 +508,64 @@ public class SQLite{
 		}
 	}
 	
+	// 获取玩家出生点
+	public Location GetSpawnPoint(String PlayerName) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM PMPlayers WHERE PlayerName=?;");
+			ps.setString(1, PlayerName.toLowerCase());
+			ResultSet result = ps.executeQuery();
+			if (result.next()) {
+				Location SpawnLocation;
+				String[] SpawnLocationString = result.getString("SpawnPoint").split(",");
+				World world = Bukkit.getServer().getWorld(SpawnLocationString[0].trim());
+				SpawnLocation = new Location(world, 
+						Double.valueOf(SpawnLocationString[1]) + 0.5, 
+						Double.valueOf(SpawnLocationString[2]) + 0.2, 
+						Double.valueOf(SpawnLocationString[3]) + 0.5 );
+				return SpawnLocation;
+			} else
+				return null;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
+	// 设定玩家出生点
+	public void SetSpawnPoint(String PlayerName, Location SpawnLocation) {
+		try {
+			PreparedStatement ps = DataBaseConnection.prepareStatement("UPDATE PMPlayers SET SpawnPoint=? WHERE PlayerName=?;");
+			String SpawnLocationString = SpawnLocation.getWorld().getName() 
+					+ "," + SpawnLocation.getBlockX()
+					+ "," + SpawnLocation.getBlockY()
+					+ "," + SpawnLocation.getBlockZ();
+			ps.setString(1, SpawnLocationString);
+			ps.setString(2, PlayerName.toLowerCase());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+	
+		}
+	}*/
+	
 	public Connection getConnection() {
 		return this.DataBaseConnection;
+	}
+
+	@Override
+	public boolean UpdatePlayerInfo(String playerUUID, Map<String, Object> playerMap, List<String> updateList) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean CostGem(String playerUUID, int Gem, String Message) {
+		return false;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean ChargeGem(String playerUUID, int chargeGem, String message) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -1,15 +1,14 @@
 ﻿package net.meano.PlayerManager;
 
-import net.meano.DataBase.ClientStatu;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class ClientCheck implements Runnable {
 	public int ContinuousDays;
 	public Player player;
-	public PlayerManagerMain PMM;
+	public BukkitMain PMM;
 	public String PlayerCombo;
-	public ClientCheck(int CDays, Player p, String Combo, PlayerManagerMain P){
+
+	public ClientCheck(int CDays, Player p, String Combo, BukkitMain P){
 		ContinuousDays = CDays;
 		player = p;
 		PlayerCombo = Combo;
@@ -17,7 +16,7 @@ public class ClientCheck implements Runnable {
 	}
 	@Override
 	public void run(){
-		if(!player.isOnline()) return;
+		/*if(!player.isOnline()) return;
 		String PlayerName = player.getName();
 		if(PMM.SQLData.GetClientStatu(PlayerName).equals(ClientStatu.Online)){
 			player.sendMessage("§b§l>>感谢您使用专用客户端登陆Meano服");
@@ -27,12 +26,12 @@ public class ClientCheck implements Runnable {
 			} else if(PlayerCombo.equals("B")){
 				player.sendMessage("§b§l>>可获得8小时每天的在线时间，感谢您对服务器的支持！");
 			}
-			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 0);
+			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
 		} else {
 			player.sendMessage("§b§l>>您未使用Meano服专用客户端登陆服务器.");
 			player.sendMessage("§b§l>>§c§l无法获得§b§l不限时游戏资格，每天只有1小时在线时间。");
-			player.playSound(player.getLocation(), Sound.COW_HURT, 1, 0);
-		}
+			player.playSound(player.getLocation(), Sound.ENTITY_COW_HURT, 1, 0);
+		}*/
 		
 	}
 }

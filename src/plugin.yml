@@ -1,7 +1,11 @@
-﻿name: PlayerManager
-main: net.meano.PlayerManager.PlayerManagerMain
-version: 0.2
+name: PlayerManager
+main: net.meano.PlayerManager.BukkitMain
+version: 2.0
+api-version: 1.14
 author: Meano
+website: www.meano.net
+prefix: PM
+
 commands:
   PlayerManager:
     description: 玩家管理

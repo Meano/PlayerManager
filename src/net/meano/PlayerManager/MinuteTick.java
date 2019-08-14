@@ -1,16 +1,16 @@
 ﻿package net.meano.PlayerManager;
 
-import net.meano.DataBase.ClientStatu;
-import net.meano.DataBase.SQLite;
+//import net.meano.DataBase.ClientStatu;
+import net.meano.DataBase.DBManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import net.meano.PlayerManager.PlayerManagerMain;
+import net.meano.PlayerManager.BukkitMain;
 
 public class MinuteTick implements Runnable {
-	public PlayerManagerMain PMM;
-	public SQLite SQLData;
-	public MinuteTick(PlayerManagerMain P){
+	public BukkitMain PMM;
+	public DBManager SQLData;
+	public MinuteTick(BukkitMain P){
 		PMM = P;
 		SQLData = P.SQLData;
 	}
@@ -18,7 +18,7 @@ public class MinuteTick implements Runnable {
 	public void run() {
 		SQLData.Close();
 		SQLData.Open();
-		UpdateTime();
+		/*UpdateTime();
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			String ComboType = SQLData.GetComboType(player.getName());
 			if (ComboType.equals("Normal")) {
@@ -26,7 +26,7 @@ public class MinuteTick implements Runnable {
 			} else if (ComboType.equals("B")) {
 				MinuteB(player);
 			}
-		}
+		}*/
 	}
 	
 	//更新免费玩家时间
@@ -34,8 +34,8 @@ public class MinuteTick implements Runnable {
 		long LongTime = System.currentTimeMillis();
 		if (PMM.getTimeHours(LongTime) == 18) {
 			if (PMM.getTimeMinutes(LongTime) < 3 && (!PMM.isUpdate)) {
-				SQLData.UpdateLimitTime(60);
-				SQLData.UpdateAwardTime(240);
+				//SQLData.UpdateLimitTime(60);
+				//SQLData.UpdateAwardTime(240);
 				Bukkit.broadcastMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "各位未使用官方客户端的玩家，服务器更新了在线时长，每天18点更新，限制在线时长使用/pm me 查看。");
 				PMM.isUpdate = true;
 			} else if (PMM.getTimeMinutes(LongTime) > 3) {
@@ -46,7 +46,7 @@ public class MinuteTick implements Runnable {
 	
 	//Normal套餐每分钟进行的处理
 	public void MinuteNormal(Player player){
-		if(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Offline)){
+		/*if(SQLData.GetClientStatu(player.getName()).equals(ClientStatu.Offline)){
 			int LimitTime = SQLData.GetTodayLimitMinute(player.getName());
 			if (LimitTime > 0) {
 				if (LimitTime == 1) {
@@ -66,12 +66,12 @@ public class MinuteTick implements Runnable {
 			if (OnlineMinutes >= 0){
 				SQLData.SetOnlineMinutes(player.getName(), OnlineMinutes + 1);
 			}
-		}
+		}*/
 	}
 	
 	//B套餐每分钟进行的处理
 	public void MinuteB(Player player){
-		String Week = PMM.getWeekString(System.currentTimeMillis());
+		/*String Week = PMM.getWeekString(System.currentTimeMillis());
 		if (Week.equals("星期日") || Week.equals("星期六") || Week.equals("星期五")) {
 		} else {
 			int LimitTime = SQLData.GetTodayLimitMinute(player.getName());
@@ -105,6 +105,6 @@ public class MinuteTick implements Runnable {
 			if (OnlineMinutes >= 0){
 				SQLData.SetOnlineMinutes(player.getName(), OnlineMinutes + 1);
 			}
-		}
+		}*/
 	}
 }
