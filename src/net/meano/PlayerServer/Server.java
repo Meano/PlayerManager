@@ -1,4 +1,4 @@
-﻿package net.meano.PlayerServer;
+package net.meano.PlayerServer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +27,7 @@ public class Server extends Thread {
 
 	public void CloseServer() {
 		try {
-			PMServer.close();
+			PMServer.close();q
 		} catch (IOException e) {
 			PMM.getLogger().info(e.getCause().getMessage());
 		}

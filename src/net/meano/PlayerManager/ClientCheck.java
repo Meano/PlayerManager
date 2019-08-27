@@ -1,4 +1,4 @@
-﻿package net.meano.PlayerManager;
+package net.meano.PlayerManager;
 
 import org.bukkit.entity.Player;
 
