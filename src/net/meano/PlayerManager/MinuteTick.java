@@ -1,4 +1,4 @@
-﻿package net.meano.PlayerManager;
+package net.meano.PlayerManager;
 
 //import net.meano.DataBase.ClientStatu;
 import net.meano.DataBase.DBManager;
