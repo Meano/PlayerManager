@@ -1,19 +1,14 @@
 package net.meano.DataBase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
 import net.meano.PlayerManager.BukkitMain;
 import net.meano.PlayerManager.BungeeMain;
+import java.sql.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class MySQL implements DBManager {
 	private Connection DataBaseConnection;
-
 
 	private String SQLHost;
 	private String SQLPort;
@@ -35,7 +30,6 @@ public class MySQL implements DBManager {
 			PMBukkit = BukkitMain.Instance;
 		} catch (ClassNotFoundException e) {
 			PMBungee = BungeeMain.Instance;
-			//LogInfo("未找到Bukkit驱动" + e.getLocalizedMessage());
 		}
 
 		try {
@@ -119,9 +113,8 @@ public class MySQL implements DBManager {
 	public void Open() {
 		try {
 			DataBaseConnection = DriverManager.getConnection("jdbc:mysql://" + SQLHost + ':' + SQLPort + '/' + SQLDatabase + '?' + "user=" + SQLUsername + "&password=" + SQLPassword + "&useSSL=" + "false" + "&characterEncoding=" + "UTF-8");
-			// PMM.getLogger().info("数据库：" + SQLHost + ":" + SQLPort + "/" +
-			// SQLDatabase + "连接成功！");
 		} catch (SQLException e) {
+			e.printStackTrace();
 			LogInfo("MySQL连接失败！" + e.getMessage());
 		}
 	}
@@ -153,10 +146,18 @@ public class MySQL implements DBManager {
 		}
 	}
 
-	public ResultSet GetPlayerInfo(String PlayerName) {
+	public ResultSet GetPlayerInfo(String player) {
 		try {
-			PreparedStatement ps = DataBaseConnection.prepareStatement("SELECT * FROM " + SQLTable + " WHERE PlayerName=?;");
-			ps.setString(1, PlayerName.toLowerCase());
+			String sqlCmd = "SELECT * FROM " + SQLTable + " WHERE PlayerUUID=?;";
+			try {
+				UUID.fromString(player);
+			}
+			catch(Exception e) {
+				sqlCmd = "SELECT * FROM " + SQLTable + " WHERE PlayerName=?;";
+			}
+
+			PreparedStatement ps = DataBaseConnection.prepareStatement(sqlCmd);
+			ps.setString(1, player.toLowerCase());
 			ResultSet result = ps.executeQuery();
 			if (result.next())
 				return result;
@@ -499,5 +500,4 @@ public class MySQL implements DBManager {
 	 * 
 	 * } }
 	 */
-
 }

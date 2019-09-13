@@ -1,4 +1,4 @@
-﻿package net.meano.DataBase;
+package net.meano.DataBase;
 
 import java.io.File;
 import java.io.IOException;
