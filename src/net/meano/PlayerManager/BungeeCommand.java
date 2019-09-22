@@ -1,11 +1,12 @@
 package net.meano.PlayerManager;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BungeeCommand extends Command {
 
@@ -17,6 +18,7 @@ public class BungeeCommand extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
+		if (!sender.hasPermission("PlayerManager")) return;
 		if (args.length >= 3) {
 			if(args[0].equalsIgnoreCase("charge")) {
 				String playerName = args[1];
