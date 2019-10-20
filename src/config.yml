@@ -1,0 +1,23 @@
+MySQL:
+  Enable: true
+  Host: localhost
+  Port: 3306
+  Database: Minecraft
+  Table: PMPlayers
+  Username: root
+  Password:
+
+Redis:
+  Host: localhost
+  Port: 6379
+  Password:
+
+PlayerDBMap:
+  UUID: "String"
+  PlayerName: "String"
+  PlayerUUID: "String"
+  Mail: "String"
+  Merit: "Integer"
+  Gem: "Integer"
+  SkinEnable: "Integer"
+  ViewDistance: "Integer"
