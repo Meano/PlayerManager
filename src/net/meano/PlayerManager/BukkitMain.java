@@ -3,7 +3,6 @@ package net.meano.PlayerManager;
 import net.meano.DataBase.DBManager;
 import net.meano.DataBase.MySQL;
 import net.meano.DataBase.SQLite;
-import net.meano.PlayerServer.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,8 +22,6 @@ public class BukkitMain extends JavaPlugin {
 	
 	public Map<String, PlayerInfo> PlayerMap = new HashMap<String, PlayerInfo>();
 	public Map<String, String> PlayerDataMap = new HashMap<String, String>();
-	
-	public Server PlayerSocket;
 	public boolean isUpdate = false;
 
 	public void onEnable() {
