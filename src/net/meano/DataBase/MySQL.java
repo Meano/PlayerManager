@@ -33,9 +33,9 @@ public class MySQL implements DBManager {
 		}
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			LogInfo("未找到MySQL驱动" + e.getLocalizedMessage());
+			e.printStackTrace();
 		}
 
 		Open();
@@ -112,7 +112,15 @@ public class MySQL implements DBManager {
 	
 	public void Open() {
 		try {
-			DataBaseConnection = DriverManager.getConnection("jdbc:mysql://" + SQLHost + ':' + SQLPort + '/' + SQLDatabase + '?' + "user=" + SQLUsername + "&password=" + SQLPassword + "&useSSL=" + "false" + "&characterEncoding=" + "UTF-8");
+			DataBaseConnection =
+				DriverManager.getConnection(
+				"jdbc:mysql://" + SQLHost + ':' + SQLPort + '/' + SQLDatabase + '?' +
+					"useSSL=false&" +
+					"characterEncoding=UTF-8&" +
+					"allowPublicKeyRetrieval=true&",
+					SQLUsername,
+					SQLPassword
+				);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LogInfo("MySQL连接失败！" + e.getMessage());
