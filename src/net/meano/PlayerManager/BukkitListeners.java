@@ -82,8 +82,8 @@ public class BukkitListeners implements Listener {
 	// 玩家退出游戏事件
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
-		String PlayerUUID = event.getPlayer().getUniqueId().toString();
-		PlayerInfo playerInfo = PM.PlayerMap.get(PlayerUUID);
+		String playerUUID = event.getPlayer().getUniqueId().toString();
+		PlayerInfo playerInfo = PM.PlayerMap.get(playerUUID);
 		if(playerInfo == null) {
 			return;
 		}
@@ -107,10 +107,10 @@ public class BukkitListeners implements Listener {
 			)
 		);
 		if(viewDistanceCost > 0) {
-			PM.SQLData.CostGem(PlayerUUID, viewDistanceCost, "视界" + viewDistance + ",时长" + df.format(onlineTimeHour) + "h.");
+			PM.SQLData.CostGem(playerUUID, viewDistanceCost, "视界" + viewDistance + ",时长" + df.format(onlineTimeHour) + "h.");
 		}
 		playerInfo.SetRedisKey("player.ViewDistanceCost", df.format(viewDistanceCostDouble % 1.0));
 
-		PM.PlayerMap.remove(PlayerUUID);
+		PM.PlayerMap.remove(playerUUID);
 	}
 }

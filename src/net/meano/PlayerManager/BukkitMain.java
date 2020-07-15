@@ -5,11 +5,13 @@ import net.meano.DataBase.MySQL;
 import net.meano.DataBase.SQLite;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.util.*;
 
 public class BukkitMain extends JavaPlugin {
@@ -54,6 +56,23 @@ public class BukkitMain extends JavaPlugin {
 			SQLData = new SQLite(new File(getDataFolder(), "PMData.db"));
 		} else {
 			SQLData = new MySQL(SQLHost, SQLPort, SQLDatabase, SQLUsername, SQLPassword, SQLTable);
+		}
+
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			SQLData.Open();
+			ResultSet PlayerData = SQLData.GetPlayerInfo(player.getName());
+			if(PlayerData == null) {
+				getLogger().info(player.getName() + " null.");
+				continue;
+			}
+
+			String playerUUID = player.getUniqueId().toString();
+			if(PlayerMap.containsKey(playerUUID)) {
+				PlayerMap.remove(playerUUID);
+			}
+
+			PlayerMap.put(playerUUID, new PlayerInfo(PlayerData, PlayerDataMap));
+			SQLData.Close();
 		}
 		
 		Bukkit.getServer().getPluginManager().registerEvents(new BukkitListeners(this), this);

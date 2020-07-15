@@ -39,20 +39,20 @@ public class PlayerInfo {
 	}
 	
 	private Map<String, Object> PlayerInfoMap = new HashMap<String, Object>();
-	
-	PlayerInfo(ResultSet playerData, Map<String, String> DataClass) {
-		try {
-			Class.forName("org.bukkit.plugin.java.JavaPlugin");
-			PMBukkit = BukkitMain.Instance;
-			RedisPool = PMBukkit.RedisPool;
-		} catch (ClassNotFoundException e) {
-			LogInfo("未找到Bukkit驱动" + e.getLocalizedMessage());
-			PMBungee = BungeeMain.Instance;
-			RedisPool = PMBungee.RedisPool;
-		}
 
-		for(Map.Entry<String, String> ClassEntry : DataClass.entrySet() ) {
-			switch(ClassEntry.getValue()) {
+			PlayerInfo(ResultSet playerData, Map<String, String> DataClass) {
+				try {
+					Class.forName("org.bukkit.plugin.java.JavaPlugin");
+					PMBukkit = BukkitMain.Instance;
+					RedisPool = PMBukkit.RedisPool;
+				} catch (ClassNotFoundException e) {
+					LogInfo("未找到Bukkit驱动" + e.getLocalizedMessage());
+					PMBungee = BungeeMain.Instance;
+					RedisPool = PMBungee.RedisPool;
+				}
+
+				for(Map.Entry<String, String> ClassEntry : DataClass.entrySet() ) {
+					switch(ClassEntry.getValue()) {
 				case "String":
 					PlayerInfoMap.put(ClassEntry.getKey(), GetResultString(playerData, ClassEntry.getKey()));
 					break;
